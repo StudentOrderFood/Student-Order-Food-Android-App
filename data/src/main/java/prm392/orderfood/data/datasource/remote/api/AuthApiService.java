@@ -8,7 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface AuthApiService {
-    @POST("api/auth/firebase-login")
-    Single<Response<TokenResponse>> sendIdToken(@Body IdTokenRequest request);
+    @POST("api/Authentications/student-login")
+    Single<Response<TokenResponse>> sendIdToken(@Body IdTokenRequest idToken);
 
 }

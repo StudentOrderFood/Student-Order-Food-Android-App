@@ -5,7 +5,12 @@ import android.content.SharedPreferences;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -38,9 +43,31 @@ public class AppModule {
     @Provides
     @Singleton
     public OkHttpClient provideOkHttpClient(AuthInterceptor authInterceptor) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(authInterceptor)
-                .build();
+        try {
+            // Create a trust manager that does not validate certificate chains
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+                        @Override public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
+                        @Override public java.security.cert.X509Certificate[] getAcceptedIssuers() { return new java.security.cert.X509Certificate[]{}; }
+                    }
+            };
+
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            return new OkHttpClient.Builder()
+                    .addInterceptor(authInterceptor)
+                    .connectTimeout(30, TimeUnit.SECONDS) // Thời gian tối đa để kết nối
+                    .readTimeout(30, TimeUnit.SECONDS)    // Thời gian tối đa để đọc response
+                    .writeTimeout(30, TimeUnit.SECONDS)   // Thời gian tối đa để ghi request
+                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                    .hostnameVerifier((hostname, session) -> true)
+                    .build();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Provides
