@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.Task;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import prm392.orderfood.androidapp.R;
+import prm392.orderfood.androidapp.databinding.ActivityMainBinding;
 import prm392.orderfood.androidapp.databinding.FragmentLoginBinding;
 import prm392.orderfood.androidapp.ui.states.SignInState;
 import prm392.orderfood.domain.models.Token;
@@ -92,9 +93,7 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
-        binding.btnSignIn.setOnClickListener(v -> {
-            signIn();
-        });
+
         setupObservers();
         setupListeners();
     }
