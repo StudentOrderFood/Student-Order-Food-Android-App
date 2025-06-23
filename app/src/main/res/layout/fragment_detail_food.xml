@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|end"
                             android:visibility="visible"
-                            app:cardBackgroundColor="#FF5722"
+                            app:cardBackgroundColor="@color/primary_color"
                             app:cardCornerRadius="18dp"
                             app:cardElevation="6dp">
 
@@ -272,7 +272,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="25,000đ"
-                            android:textColor="#FF5722"
+                            android:textColor="@color/primary_color"
                             android:textSize="32sp"
                             android:textStyle="bold" />
 
@@ -390,7 +390,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+0đ"
-                                    android:textColor="#FF5722"
+                                    android:textColor="@color/primary_color"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -401,7 +401,7 @@
                                     android:layout_marginStart="12dp"
                                     android:src="@drawable/ic_radio_checked"
                                     android:visibility="visible"
-                                    app:tint="#FF5722" />
+                                    app:tint="@color/primary_color" />
                             </LinearLayout>
                         </FrameLayout>
 
@@ -449,7 +449,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+5,000đ"
-                                    android:textColor="#FF5722"
+                                    android:textColor="@color/primary_color"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -507,7 +507,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+10,000đ"
-                                    android:textColor="#FF5722"
+                                    android:textColor="@color/primary_color"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -599,7 +599,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+8,000đ"
-                                    android:textColor="#FF5722"
+                                    android:textColor="@color/primary_color"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -658,7 +658,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+5,000đ"
-                                    android:textColor="#FF5722"
+                                    android:textColor="@color/primary_color"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -716,7 +716,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+3,000đ"
-                                    android:textColor="#FF5722"
+                                    android:textColor="@color/primary_color"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -819,7 +819,7 @@
                             android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_minus"
-                            app:tint="#FF5722" />
+                            app:tint="@color/primary_color" />
                     </FrameLayout>
 
                     <TextView
@@ -846,7 +846,7 @@
                             android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_plus"
-                            app:tint="#FF5722" />
+                            app:tint="@color/primary_color" />
                     </FrameLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -857,7 +857,7 @@
                 android:layout_height="55dp"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#FF5722"
+                app:cardBackgroundColor="@color/primary_color"
                 app:cardCornerRadius="28dp"
                 app:cardElevation="6dp">
 
