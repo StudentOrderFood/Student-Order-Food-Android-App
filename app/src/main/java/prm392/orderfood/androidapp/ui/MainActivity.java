@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,18 +34,32 @@ public class MainActivity extends AppCompatActivity {
             navController = navHost.getNavController();
         }
         bottomNavigationView = binding.bottomNavigationView;
-//        bottomNavigationView.setOnItemSelectedListener(item -> {
-//            Log.d(TAG, "Selected item: " + item.getItemId());
-//            return false;
-//        });
+        bottomNavigationView.setOnItemSelectedListener(item -> onNavigationItemSelected(item.getItemId()));
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            Log.d(TAG, "Destination changed: " + destination.getLabel());
+//            Log.d(TAG, "Destination changed: " + destination.getLabel());
             if (destination.getId() == R.id.loginFragment || destination.getId() == R.id.loginFragment) {
+                bottomNavigationView.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.introFragment) {
                 bottomNavigationView.setVisibility(View.GONE);
             } else {
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
         });
+    }
 
+    // Func handle bottom navigation item selection
+    private boolean onNavigationItemSelected(int itemId) {
+        NavOptions navOptions = new NavOptions.Builder()
+                .setLaunchSingleTop(true)            // Không tạo fragment mới nếu đã ở đó
+//                .setPopUpTo(R.id.nav_graph, false)  // Xoá fragment cũ trong stack, giữ lại main_graph
+                .build();
+        if (itemId == R.id.navigation_home) {
+            navController.navigate(R.id.action_global_homeFragment, null, navOptions);
+            return true;
+        } else if (itemId == R.id.navigation_profile) {
+            navController.navigate(R.id.action_global_profileFragment, null, navOptions);
+            return true;
+        }
+        return false;
     }
 }

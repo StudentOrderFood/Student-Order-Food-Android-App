@@ -47,72 +47,77 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/padding_20">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/login_title"
                 android:textColor="@color/primary_color"
-                android:layout_gravity="center"
                 android:textSize="@dimen/text_size_30"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_20"
                 android:text="@string/username_hint"
-                android:textColor="@color/primary_color"/>
+                android:textColor="@color/primary_color" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/example_gmail_com"/>
+                android:hint="@string/example_gmail_com" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_20"
                 android:text="@string/password"
-                android:textColor="@color/primary_color"
-                />
+                android:textColor="@color/primary_color" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/lock"/>
+                android:hint="@string/lock"
+                android:inputType="textPassword" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/forgot_password"
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/margin_10"
-                android:textColor="@color/primary_color"/>
+                android:text="@string/forgot_password"
+                android:textColor="@color/primary_color" />
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_login"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/primary_color"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_20"
+                android:backgroundTint="@color/primary_color"
+                android:text="@string/btn_login"
+                android:textColor="@color/white"
 
                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginTop="@dimen/margin_20"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_20">
+                android:orientation="vertical">
 
                 <!-- Text: "Don't have an account? Sign up" -->
                 <TextView
                     android:id="@+id/tvSignUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:text="@string/don_t_have_an_account_sign_up"
                     android:textColor="@color/primary_color"
-                    android:textStyle="bold"
                     android:textSize="16sp"
-                    android:layout_marginBottom="16dp" />
+                    android:textStyle="bold" />
 
                 <!-- Google Sign-In Button -->
                 <com.google.android.gms.common.SignInButton

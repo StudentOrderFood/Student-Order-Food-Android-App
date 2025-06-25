@@ -1,7 +1,7 @@
 package prm392.orderfood.data.mapper;
 
-import prm392.orderfood.data.datasource.remote.modelResponse.TokenResponse;
-import prm392.orderfood.domain.models.Token;
+import prm392.orderfood.data.datasource.remote.modelResponse.auth.TokenResponse;
+import prm392.orderfood.domain.models.auth.Token;
 
 public class TokenMapper {
     public static Token mapToDomain(TokenResponse response) {

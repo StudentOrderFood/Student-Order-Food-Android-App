@@ -1,7 +1,6 @@
 package prm392.orderfood.androidapp.ui.states;
 
-import prm392.orderfood.domain.models.Token;
-import prm392.orderfood.domain.models.User;
+import prm392.orderfood.domain.models.auth.Token;
 
 public abstract class SignInState {
 

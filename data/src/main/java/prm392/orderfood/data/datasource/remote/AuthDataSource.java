@@ -1,5 +1,7 @@
 package prm392.orderfood.data.datasource.remote;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -11,9 +13,10 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.api.AuthApiService;
 import prm392.orderfood.data.datasource.remote.modelRequest.IdTokenRequest;
-import prm392.orderfood.data.datasource.remote.modelResponse.TokenResponse;
+import prm392.orderfood.data.datasource.remote.modelResponse.auth.TokenResponse;
 import retrofit2.Response;
 
 public class AuthDataSource {
@@ -28,18 +31,15 @@ public class AuthDataSource {
 
     public Single<Response<TokenResponse>> sendTokenToServer() {
         return getFirebaseIdToken()
-                .flatMap(idToken -> apiService.sendIdToken(new IdTokenRequest(idToken)));
+                .doOnError(throwable -> Log.e("TOKEN_ERROR", "Lỗi khi lấy Firebase ID Token: " + throwable.getMessage(), throwable))
+                .flatMap(idToken -> {
+                    Log.d("TOKEN_DEBUG", "Firebase ID Token: " + idToken);
+                    return apiService.sendIdToken(new IdTokenRequest(idToken));
+                });
     }
 
     public Completable logOut() {
-        return Completable.create(emitter -> {
-            try {
-                firebaseAuth.signOut();
-                emitter.onComplete(); // Thành công
-            } catch (Exception e) {
-                emitter.onError(e); // Có lỗi khi signOut
-            }
-        });
+        return Completable.fromAction(firebaseAuth::signOut).subscribeOn(Schedulers.io());
     }
 
     private Single<String> getFirebaseIdToken() {

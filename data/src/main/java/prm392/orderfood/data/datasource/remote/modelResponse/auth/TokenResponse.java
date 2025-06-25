@@ -1,4 +1,4 @@
-package prm392.orderfood.data.datasource.remote.modelResponse;
+package prm392.orderfood.data.datasource.remote.modelResponse.auth;
 
 public class TokenResponse {
     private String accessToken;

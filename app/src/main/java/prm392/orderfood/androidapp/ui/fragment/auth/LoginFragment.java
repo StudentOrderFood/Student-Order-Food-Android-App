@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -19,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,14 +24,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import prm392.orderfood.androidapp.R;
-import prm392.orderfood.androidapp.databinding.ActivityMainBinding;
 import prm392.orderfood.androidapp.databinding.FragmentLoginBinding;
 import prm392.orderfood.androidapp.ui.states.SignInState;
-import prm392.orderfood.domain.models.Token;
-import prm392.orderfood.domain.models.User;
+import prm392.orderfood.androidapp.viewModel.AuthViewModel;
+import prm392.orderfood.domain.models.auth.Token;
 
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
@@ -103,6 +102,7 @@ public class LoginFragment extends Fragment {
             signIn();
         });
     }
+
     private void setupObservers() {
         authViewModel.getSignInState().observe(getViewLifecycleOwner(), state -> {
             if (state instanceof SignInState.Loading) {
@@ -126,8 +126,10 @@ public class LoginFragment extends Fragment {
     }
 
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        signInActivityResultLauncher.launch(signInIntent);
+        mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            signInActivityResultLauncher.launch(signInIntent);
+        });
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -137,7 +139,19 @@ public class LoginFragment extends Fragment {
 
             if (idToken != null) {
                 Log.d(TAG, "Google Sign In successful, got ID Token.");
-                authViewModel.loginWithGoogle();
+                // Signin với Firebase trước
+                AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+                FirebaseAuth.getInstance().signInWithCredential(credential)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Firebase Sign In successful.");
+                                // Sau khi Firebase Sign In thành công, gửi ID Token đến server
+                                authViewModel.loginWithGoogle();
+                            } else {
+                                Log.w(TAG, "Firebase Sign In failed", task.getException());
+                                authViewModel.handleSignInError(task.getException().getLocalizedMessage());
+                            }
+                        });
             } else {
                 Log.w(TAG, "Google Sign In successful, but ID Token is null.");
                 authViewModel.handleSignInError("ID Token is null");
@@ -147,10 +161,12 @@ public class LoginFragment extends Fragment {
             authViewModel.handleSignInError(e.getLocalizedMessage());
         }
     }
+
     private void navigateToHome() {
         NavController navController = Navigation.findNavController(requireView());
         navController.navigate(R.id.action_loginFragment_to_homeFragment);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

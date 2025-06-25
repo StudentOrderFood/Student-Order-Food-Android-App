@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_home_24"
         android:title="Home" />
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@mipmap/ic_launcher"
-        android:title="Test" />
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_person"
+        android:title="Profile" />
 </menu>

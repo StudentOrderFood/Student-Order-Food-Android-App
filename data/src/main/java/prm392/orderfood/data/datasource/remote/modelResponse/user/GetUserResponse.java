@@ -1,21 +1,35 @@
-package prm392.orderfood.data.datasource.remote.modelResponse;
+package prm392.orderfood.data.datasource.remote.modelResponse.user;
 
-public class LoginResponse {
-    private String id;
+public class GetUserResponse {
+    private String userId;
+    private String userName;
     private String fullName;
     private String email;
     private String phone;
     private String address;
-    private String avatar;
     private String dob;
+    private String avatar;
     private String roleId;
+    private String roleName;
 
-    public String getId() {
-        return id;
+    public GetUserResponse() {
+        // Default constructor required for calls to DataSnapshot.getValue(GetUserResponse.class)
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFullName() {
@@ -50,14 +64,6 @@ public class LoginResponse {
         this.address = address;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public String getDob() {
         return dob;
     }
@@ -66,11 +72,27 @@ public class LoginResponse {
         this.dob = dob;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public String getRoleId() {
         return roleId;
     }
 
     public void setRoleId(String roleId) {
         this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

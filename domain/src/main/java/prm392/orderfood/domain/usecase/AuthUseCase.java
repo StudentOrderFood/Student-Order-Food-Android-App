@@ -1,13 +1,11 @@
 package prm392.orderfood.domain.usecase;
 
-import com.google.android.gms.tasks.Task;
-
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
-import prm392.orderfood.domain.models.Token;
-import prm392.orderfood.domain.models.User;
-import prm392.orderfood.domain.repositories.auth.AuthRepository;
+import prm392.orderfood.domain.models.auth.Token;
+import prm392.orderfood.domain.repositories.AuthRepository;
 import retrofit2.Response;
 
 public class AuthUseCase {
@@ -22,10 +20,11 @@ public class AuthUseCase {
         return authRepository.logIn();
     }
 
-    public User getCurrentUser() {
-        return authRepository.getCurrentUser();
-    }
-    public Task<Response<Void>> SignOut() {
+    public Completable signOut() {
         return authRepository.logOut();
+    }
+
+    public  Single<Response<Boolean>> validateAccessToken() {
+        return authRepository.validateAccessToken();
     }
 }

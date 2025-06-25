@@ -284,7 +284,6 @@
                             android:text="30,000đ"
                             android:textColor="#999999"
                             android:textSize="20sp"
-                            android:textDecoration="strikethrough"
                             android:visibility="visible" />
                     </LinearLayout>
 

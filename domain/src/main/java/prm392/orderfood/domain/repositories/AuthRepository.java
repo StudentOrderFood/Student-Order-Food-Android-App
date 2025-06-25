@@ -1,10 +1,10 @@
-package prm392.orderfood.domain.repositories.auth;
+package prm392.orderfood.domain.repositories;
 
 import com.google.android.gms.tasks.Task;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
-import prm392.orderfood.domain.models.Token;
-import prm392.orderfood.domain.models.User;
+import prm392.orderfood.domain.models.auth.Token;
 import retrofit2.Response;
 /**
  * Interface representing the authentication repository.
@@ -21,24 +21,17 @@ public interface AuthRepository {
     Single<Response<Token>> logIn();
 
     /**
-     * Retrieves the currently authenticated user.
-     *
-     * @return The current User object, or null if no user is authenticated.
-     */
-    User getCurrentUser();
-
-    /**
      * Signs out the currently authenticated user.
      *
      * @return A Task containing a Response object indicating the result of the sign-out operation.
      */
-    Task<Response<Void>> logOut();
+    Completable logOut();
 
     /**
-     * Retrieves the ID token of the currently authenticated user.
-     * Useful for authenticating with backend API
+     * Checks if the access token is valid.
      *
-     * @return A Task containing the ID token as a String.
+     * @return A Task that emits true if the token is valid, false otherwise.
      */
-    Task<String> getIdToken();
+    Single<Response<Boolean>> validateAccessToken();
+
 }

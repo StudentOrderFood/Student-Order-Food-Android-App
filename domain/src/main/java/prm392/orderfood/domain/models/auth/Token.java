@@ -1,4 +1,4 @@
-package prm392.orderfood.domain.models;
+package prm392.orderfood.domain.models.auth;
 
 public class Token {
     private String accessToken;
@@ -29,17 +29,5 @@ public class Token {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public boolean isStudent() {
-        return "STUDENT".equalsIgnoreCase(userRole);
-    }
-
-    public boolean isShop() {
-        return "SHOP".equalsIgnoreCase(userRole);
-    }
-
-    public boolean isAdmin() {
-        return "ADMIN".equalsIgnoreCase(userRole);
     }
 }

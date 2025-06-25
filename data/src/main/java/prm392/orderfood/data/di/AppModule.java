@@ -20,6 +20,7 @@ import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.api.AuthApiService;
+import prm392.orderfood.data.datasource.remote.api.UserApiService;
 import prm392.orderfood.data.network.AuthInterceptor;
 import prm392.orderfood.data.network.RetrofitClient;
 import retrofit2.Retrofit;
@@ -84,8 +85,13 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public AuthApiService provideRetrofitAPI(Retrofit retrofit) {
+    public AuthApiService provideAuthApiService(Retrofit retrofit) {
         return retrofit.create(AuthApiService.class);
     }
     // Nếu có các ApiService khác, cung cấp chúng tương tự như AuthApiService
+    @Singleton
+    @Provides
+    public UserApiService provideUserApiService(Retrofit retrofit) {
+        return retrofit.create(UserApiService.class);
+    }
 }
