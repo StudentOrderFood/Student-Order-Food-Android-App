@@ -2,6 +2,7 @@ package prm392.orderfood.androidapp.ui.fragment.auth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -101,6 +103,18 @@ public class LoginFragment extends Fragment {
         binding.btnSignIn.setOnClickListener(v -> {
             signIn();
         });
+
+        binding.btnLogin.setOnClickListener(v -> {
+            String identifier = binding.etIdentifier.getText().toString().trim();
+            String password = binding.etPassword.getText().toString().trim();
+            if (identifier.isEmpty() || password.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter both identifier and password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            authViewModel.loginShopOwner(identifier, password);
+        });
+
+        setupTVSignUpListener();
     }
 
     private void setupObservers() {
@@ -115,14 +129,27 @@ public class LoginFragment extends Fragment {
 
             if (state instanceof SignInState.Success) {
                 Token token = ((SignInState.Success) state).getToken();
-                Log.d(TAG, "Login success: " + token.getAccessToken());
+//                Log.d(TAG, "Login success: " + token.getAccessToken());
+                Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show();
                 navigateToHome();
             } else if (state instanceof SignInState.Error) {
                 String error = ((SignInState.Error) state).getErrorMessage();
-                Log.e(TAG, "Login error: " + error);
-//                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+//                Log.e(TAG, "Login error: " + error);
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private  void setupTVSignUpListener() {
+        binding.tvSignUp.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.action_loginFragment_to_registerFragment);
+        });
+        // Underline the TextView and set color
+        binding.tvSignUp.setPaintFlags(binding.tvSignUp.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        // Make the TextView clickable and focusable
+        binding.tvSignUp.setClickable(true);
+        binding.tvSignUp.setFocusable(true);
     }
 
     private void signIn() {

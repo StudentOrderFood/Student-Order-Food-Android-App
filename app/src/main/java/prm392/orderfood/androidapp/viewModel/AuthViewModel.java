@@ -1,5 +1,7 @@
 package prm392.orderfood.androidapp.viewModel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,6 +14,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import prm392.orderfood.androidapp.ui.states.SignInState;
+import prm392.orderfood.androidapp.ui.states.SignUpState;
+import prm392.orderfood.domain.models.users.UserRegister;
 import prm392.orderfood.domain.usecase.AuthUseCase;
 
 @HiltViewModel
@@ -22,12 +26,18 @@ public class AuthViewModel extends ViewModel {
 
     private final MutableLiveData<SignInState> mSignInState = new MutableLiveData<>(new SignInState.Idle());
     private final MutableLiveData<String> navigateTo = new MutableLiveData<>();
+    private final MutableLiveData<SignUpState> mSignUpState = new MutableLiveData<>(new SignUpState.Idle());
 
     public LiveData<SignInState> getSignInState() {
         return mSignInState;
     }
+
     public LiveData<String> getNavigateTo() {
         return navigateTo;
+    }
+
+    public LiveData<SignUpState> getSignUpState() {
+        return mSignUpState;
     }
 
     @Inject
@@ -46,7 +56,7 @@ public class AuthViewModel extends ViewModel {
                             if (response.isSuccessful() && response.body() != null) {
                                 mSignInState.setValue(new SignInState.Success(response.body()));
                             } else if (response.errorBody() != null) {
-                                mSignInState.setValue(new SignInState.Error("Error: " + response.code()));
+                                mSignInState.setValue(new SignInState.Error(response.errorBody().string()));
                             } else {
                                 mSignInState.setValue(new SignInState.Error("Unknown error"));
                             }
@@ -57,7 +67,32 @@ public class AuthViewModel extends ViewModel {
                                 message = throwable.toString(); // fallback để log ra tên class của exception
                             }
                             mSignInState.setValue(new SignInState.Error(message));
-                        }                );
+                        });
+        mCompositeDisposable.add(disposable);
+    }
+
+    public void loginShopOwner(String identifier, String password) {
+        mSignInState.setValue(new SignInState.Loading());
+
+        Disposable disposable = mAuthUseCase.shopOwnerLogin(identifier, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if (response.isSuccessful() && response.body() != null) {
+                        mSignInState.setValue(new SignInState.Success(response.body()));
+                    } else if (response.errorBody() != null) {
+                        mSignInState.setValue(new SignInState.Error(response.errorBody().string()));
+                    } else {
+                        mSignInState.setValue(new SignInState.Error("Unknown error"));
+                    }
+                }, throwable -> {
+                    String message = throwable.getMessage();
+                    if (message == null || message.isEmpty()) {
+                        message = throwable.toString(); // fallback để log ra tên class của exception
+                    }
+                    mSignInState.setValue(new SignInState.Error(message));
+                });
+
         mCompositeDisposable.add(disposable);
     }
 
@@ -90,6 +125,32 @@ public class AuthViewModel extends ViewModel {
         mCompositeDisposable.add(disposable);
     }
 
+    public void registerShopOwner(UserRegister register) {
+        mSignUpState.setValue(new SignUpState.Loading());
+
+        Disposable disposable = mAuthUseCase.registerShopOwner(register)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String successMsg = response.body();
+                        mSignUpState.setValue(new SignUpState.Success(successMsg));
+                    } else if (response.errorBody() != null) {
+                        String errorMessage = response.errorBody().string();
+                        mSignUpState.setValue(new SignUpState.Error(errorMessage));
+                    } else {
+                        mSignUpState.setValue(new SignUpState.Error("Unknown error"));
+                    }
+                }, throwable -> {
+                    String message = throwable.getMessage();
+                    if (message == null || message.isEmpty()) {
+                        message = throwable.toString(); // fallback để log ra tên class của exception
+                    }
+                    mSignUpState.setValue(new SignUpState.Error(message));
+                });
+
+        mCompositeDisposable.add(disposable);
+    }
     // Helper method to update state on Google Sign-In UI failure
     public void handleSignInError(String errorMessage) {
         mSignInState.setValue(new SignInState.Error(errorMessage));

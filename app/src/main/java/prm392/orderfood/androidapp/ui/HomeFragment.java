@@ -68,6 +68,9 @@ public class HomeFragment extends Fragment {
                         .load(userProfile.getAvatar())
                         .placeholder(R.drawable.avatar)
                         .into(binding.civProfileImg);
+            } else {
+                // Xử lý trường hợp không có dữ liệu người dùng
+                binding.civProfileImg.setImageResource(R.drawable.avatar); // Hoặc một hình ảnh mặc định khác
             }
         });
     }

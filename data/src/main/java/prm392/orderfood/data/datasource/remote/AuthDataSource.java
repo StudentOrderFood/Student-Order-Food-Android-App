@@ -16,6 +16,9 @@ import io.reactivex.schedulers.Schedulers;
 import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.api.AuthApiService;
 import prm392.orderfood.data.datasource.remote.modelRequest.IdTokenRequest;
+import prm392.orderfood.data.datasource.remote.modelRequest.LoginRequest;
+import prm392.orderfood.data.datasource.remote.modelRequest.RegisterRequest;
+import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.auth.TokenResponse;
 import retrofit2.Response;
 
@@ -29,7 +32,7 @@ public class AuthDataSource {
         this.apiService = apiService;
     }
 
-    public Single<Response<TokenResponse>> sendTokenToServer() {
+    public Single<ApiResponse<TokenResponse>> sendTokenToServer() {
         return getFirebaseIdToken()
                 .doOnError(throwable -> Log.e("TOKEN_ERROR", "Lỗi khi lấy Firebase ID Token: " + throwable.getMessage(), throwable))
                 .flatMap(idToken -> {
@@ -42,15 +45,25 @@ public class AuthDataSource {
         return Completable.fromAction(firebaseAuth::signOut).subscribeOn(Schedulers.io());
     }
 
+    public Single<ApiResponse<String>> registerShopOwner(RegisterRequest request) {
+        return apiService.registerShopOwner(request)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<ApiResponse<TokenResponse>> shopOwnerLogin(LoginRequest request) {
+        return apiService.shopOwnerLogin(request)
+                .subscribeOn(Schedulers.io());
+    }
+
     private Single<String> getFirebaseIdToken() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user == null) {
             return Single.error(new Throwable("User not logged in"));
         }
 
-        if (user.getEmail() == null || !user.getEmail().endsWith(".edu.vn")) {
-            return Single.error(new Throwable("Only .edu.vn emails allowed"));
-        }
+//        if (user.getEmail() == null || !user.getEmail().endsWith(".edu.vn")) {
+//            return Single.error(new Throwable("Only .edu.vn emails allowed"));
+//        }
 
         return Single.fromCallable(() -> {
             // Chạy Blocking để lấy Token một cách đồng bộ

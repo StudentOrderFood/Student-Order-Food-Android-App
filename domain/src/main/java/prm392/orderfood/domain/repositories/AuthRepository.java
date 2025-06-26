@@ -1,10 +1,9 @@
 package prm392.orderfood.domain.repositories;
 
-import com.google.android.gms.tasks.Task;
-
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import prm392.orderfood.domain.models.auth.Token;
+import prm392.orderfood.domain.models.users.UserRegister;
 import retrofit2.Response;
 /**
  * Interface representing the authentication repository.
@@ -33,5 +32,13 @@ public interface AuthRepository {
      * @return A Task that emits true if the token is valid, false otherwise.
      */
     Single<Response<Boolean>> validateAccessToken();
-
+    /**
+     * Registers a new shop owner with the provided registration details.
+     *
+     * @param userRegister The registration request containing user details.
+     * @return A Single that emits a Response containing a success message if registration is successful,
+     *         or an error if the registration fails.
+     */
+    Single<Response<String>> registerShopOwner(UserRegister userRegister);
+    Single<Response<Token>> shopOwnerLogin(String identifier, String password);
 }

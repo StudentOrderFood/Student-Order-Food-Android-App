@@ -1,8 +1,5 @@
 package prm392.orderfood.data.repositoryImpl;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
@@ -11,8 +8,11 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.AuthDataSource;
+import prm392.orderfood.data.datasource.remote.modelRequest.LoginRequest;
 import prm392.orderfood.data.mapper.TokenMapper;
+import prm392.orderfood.data.mapper.UserMapper;
 import prm392.orderfood.domain.models.auth.Token;
+import prm392.orderfood.domain.models.users.UserRegister;
 import prm392.orderfood.domain.repositories.AuthRepository;
 import retrofit2.Response;
 
@@ -31,13 +31,18 @@ public class AuthRepositoryImpl implements AuthRepository {
         return authDataSource.sendTokenToServer()
                 .subscribeOn(Schedulers.io())
                 .map(response -> {
-                    if (response.isSuccessful() && response.body() != null) {
-                        Token token = TokenMapper.mapToDomain(response.body());
+                    boolean success = response.isSuccess();
+                    if (success) {
+                        Token token = TokenMapper.mapToDomain(response.getData());
                         tokenLocalDataSource.saveToken(token.getAccessToken(), token.getRefreshToken(),
                                 token.getUserRole(), token.getUserId());
                         return Response.success(token);
                     } else {
-                        return Response.error(response.code(), response.errorBody());
+                        ResponseBody errorBody = ResponseBody.create(
+                                response.getMessage() != null ? response.getMessage() : "Login failed",
+                                (okhttp3.MediaType) null
+                        );
+                        return Response.error(400, errorBody); // Use appropriate error code if available
                     }
                 });
     }
@@ -58,7 +63,47 @@ public class AuthRepositoryImpl implements AuthRepository {
                 boolean isValid = tokenLocalDataSource.isTokenValid(accessToken);
                 return Response.success(isValid);
             } catch (Exception e) {
-                return Response.error(500, ResponseBody.create("Token validation failed", (okhttp3.MediaType) null));            }
+                return Response.error(500, ResponseBody.create("Token validation failed", (okhttp3.MediaType) null));
+            }
         });
+    }
+
+    @Override
+    public Single<Response<String>> registerShopOwner(UserRegister register) {
+        return authDataSource.registerShopOwner(UserMapper.mapToRegisterRequest(register))
+                .subscribeOn(Schedulers.io())
+                .map(apiResponse -> {
+                    boolean success = apiResponse.isSuccess();
+                    if (success) {
+                        return Response.success(apiResponse.getMessage() != null ? apiResponse.getMessage() : "Registration successful");
+                    } else {
+                        ResponseBody errorBody = ResponseBody.create(
+                                apiResponse.getMessage() != null ? apiResponse.getMessage() : "Registration failed",
+                                (okhttp3.MediaType) null
+                        );
+                        return Response.error(400, errorBody); // Use appropriate error code if available
+                    }
+                });
+    }
+
+    @Override
+    public Single<Response<Token>> shopOwnerLogin(String identifier, String password) {
+        return authDataSource.shopOwnerLogin(new LoginRequest(identifier, password))
+                .subscribeOn(Schedulers.io())
+                .map(apiResponse -> {
+                    boolean success = apiResponse.isSuccess();
+                    if (success) {
+                        Token token = TokenMapper.mapToDomain(apiResponse.getData());
+                        tokenLocalDataSource.saveToken(token.getAccessToken(), token.getRefreshToken(),
+                                token.getUserRole(), token.getUserId());
+                        return Response.success(token);
+                    } else {
+                        ResponseBody errorBody = ResponseBody.create(
+                                apiResponse.getMessage() != null ? apiResponse.getMessage() : "Login failed",
+                                (okhttp3.MediaType) null
+                        );
+                        return Response.error(400, errorBody); // Use appropriate error code if available
+                    }
+                });
     }
 }

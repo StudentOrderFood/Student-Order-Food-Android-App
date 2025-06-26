@@ -24,10 +24,12 @@ public class UserRepositoryImpl implements UserRepository {
         String userId = tokenLocalDataSource.getUserId();
         return userDataSource.getUserById(userId)
                 .map(response -> {
-                    if (response.isSuccessful() && response.body() != null) {
-                        return Response.success(UserMapper.mapToUserProfileDomain(response.body()));
+                    boolean success = response.isSuccess();
+                    if (success) {
+                        return Response.success(UserMapper.mapToUserProfileDomain(response.getData()));
                     } else {
-                        return Response.error(response.code(), response.errorBody());
+                        String errorMessage = response.getMessage() != null ? response.getMessage() : "Failed to fetch user profile";
+                        return Response.error(400, okhttp3.ResponseBody.create(errorMessage, null));
                     }
                 });
     }
