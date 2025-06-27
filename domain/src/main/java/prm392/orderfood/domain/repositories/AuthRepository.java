@@ -17,7 +17,7 @@ public interface AuthRepository {
      * @return A Single that emits a Response containing the Token object if successful,
      *         or an error if the login fails.
      */
-    Single<Response<Token>> logIn();
+    Single<Response<Token>> loginWithGoogle(String idToken);
 
     /**
      * Signs out the currently authenticated user.

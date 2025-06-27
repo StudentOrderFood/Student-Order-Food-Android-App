@@ -27,8 +27,8 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
-    public Single<Response<Token>> logIn() {
-        return authDataSource.sendTokenToServer()
+    public Single<Response<Token>> loginWithGoogle(String idToken) {
+        return authDataSource.sendRawGoogleIdToken(idToken)
                 .subscribeOn(Schedulers.io())
                 .map(response -> {
                     boolean success = response.isSuccess();

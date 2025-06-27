@@ -1,7 +1,5 @@
 package prm392.orderfood.androidapp.viewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -46,10 +44,10 @@ public class AuthViewModel extends ViewModel {
         mCompositeDisposable = new CompositeDisposable();
     }
 
-    public void loginWithGoogle() {
+    public void loginWithGoogle(String idToken) {
         mSignInState.setValue(new SignInState.Loading());
 
-        Disposable disposable = mAuthUseCase.login()
+        Disposable disposable = mAuthUseCase.loginWithGoogle(idToken)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         response -> {

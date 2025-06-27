@@ -70,4 +70,9 @@ public class AuthDataSource {
             return Tasks.await(user.getIdToken(true), 10, TimeUnit.SECONDS).getToken();
         }).subscribeOn(Schedulers.io());
     }
+
+    public Single<ApiResponse<TokenResponse>> sendRawGoogleIdToken(String idToken) {
+        Log.d("TOKEN_RAW", "Google ID Token: " + idToken);
+        return apiService.sendIdToken(new IdTokenRequest(idToken));
+    }
 }

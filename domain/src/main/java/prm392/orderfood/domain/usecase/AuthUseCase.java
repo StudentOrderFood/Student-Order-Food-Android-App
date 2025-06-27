@@ -17,8 +17,8 @@ public class AuthUseCase {
         this.authRepository = authRepository;
     }
 
-    public Single<Response<Token>> login() {
-        return authRepository.logIn();
+    public Single<Response<Token>> loginWithGoogle(String idToken) {
+        return authRepository.loginWithGoogle(idToken);
     }
 
     public Completable signOut() {

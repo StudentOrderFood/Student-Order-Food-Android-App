@@ -165,20 +165,21 @@ public class LoginFragment extends Fragment {
             String idToken = account.getIdToken();
 
             if (idToken != null) {
-                Log.d(TAG, "Google Sign In successful, got ID Token.");
-                // Signin với Firebase trước
-                AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-                FirebaseAuth.getInstance().signInWithCredential(credential)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "Firebase Sign In successful.");
-                                // Sau khi Firebase Sign In thành công, gửi ID Token đến server
-                                authViewModel.loginWithGoogle();
-                            } else {
-                                Log.w(TAG, "Firebase Sign In failed", task.getException());
-                                authViewModel.handleSignInError(task.getException().getLocalizedMessage());
-                            }
-                        });
+                authViewModel.loginWithGoogle(idToken); // Truyền trực tiếp lên BE, KHÔNG dùng FirebaseAuth nữa
+//                Log.d(TAG, "Google Sign In successful, got ID Token.");
+//                // Signin với Firebase trước
+//                AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+//                FirebaseAuth.getInstance().signInWithCredential(credential)
+//                        .addOnCompleteListener(task -> {
+//                            if (task.isSuccessful()) {
+//                                Log.d(TAG, "Firebase Sign In successful.");
+//                                // Sau khi Firebase Sign In thành công, gửi ID Token đến server
+//                                authViewModel.loginWithGoogle();
+//                            } else {
+//                                Log.w(TAG, "Firebase Sign In failed", task.getException());
+//                                authViewModel.handleSignInError(task.getException().getLocalizedMessage());
+//                            }
+//                        });
             } else {
                 Log.w(TAG, "Google Sign In successful, but ID Token is null.");
                 authViewModel.handleSignInError("ID Token is null");
