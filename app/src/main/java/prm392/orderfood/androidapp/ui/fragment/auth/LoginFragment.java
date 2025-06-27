@@ -35,6 +35,7 @@ import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.FragmentLoginBinding;
 import prm392.orderfood.androidapp.ui.states.SignInState;
 import prm392.orderfood.androidapp.viewModel.AuthViewModel;
+import prm392.orderfood.androidapp.viewModel.UserViewModel;
 import prm392.orderfood.domain.models.auth.Token;
 
 @AndroidEntryPoint
@@ -43,6 +44,7 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
     private FragmentLoginBinding binding;
     private AuthViewModel authViewModel;
+    private UserViewModel mUserViewModel;
     private GoogleSignInClient mGoogleSignInClient;
     private ActivityResultLauncher<Intent> signInActivityResultLauncher;
 
@@ -94,7 +96,7 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
-
+        mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         setupObservers();
         setupListeners();
     }
@@ -132,6 +134,7 @@ public class LoginFragment extends Fragment {
 //                Log.d(TAG, "Login success: " + token.getAccessToken());
                 Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show();
                 navigateToHome();
+                mUserViewModel.fetchUserProfile(); // Fetch user profile after login
             } else if (state instanceof SignInState.Error) {
                 String error = ((SignInState.Error) state).getErrorMessage();
 //                Log.e(TAG, "Login error: " + error);

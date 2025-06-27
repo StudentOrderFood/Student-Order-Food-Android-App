@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "1049255979887-vdfunh376i57m1uagj42sh63uoc4vc3d.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "prm392.orderfood.androidapp",
-            "certificate_hash": "2e202d8b56fa6613f5d2949fa7460aa48f04022e"
-          }
-        },
-        {
           "client_id": "1049255979887-4h9q7kudso3fd0bdolacgnoiogf6g40k.apps.googleusercontent.com",
           "client_type": 3
         }
