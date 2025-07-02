@@ -1,0 +1,123 @@
+package prm392.orderfood.androidapp.ui.fragment.shopOwner;
+
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import prm392.orderfood.androidapp.R;
+import prm392.orderfood.androidapp.viewModel.ShopViewModel;
+import prm392.orderfood.domain.models.shops.Shop;
+
+@AndroidEntryPoint
+public class MyShopListFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private ProgressBar progressBar;
+    private FloatingActionButton btnAddShop;
+    private ShopViewModel shopViewModel;
+    private ShopOwnerAdapter adapter;
+
+    private int pageIndex = 1;
+    private final int pageSize = 10;
+    private boolean isLoadingMore = false;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_owner_shop_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        recyclerView = view.findViewById(R.id.recyclerViewMyShop);
+        progressBar = view.findViewById(R.id.progressBarMyShop);
+        btnAddShop = view.findViewById(R.id.btnAddShop);
+
+        adapter = new ShopOwnerAdapter(new ArrayList<>(), new ShopOwnerAdapter.OnShopActionListener() {
+            @Override
+            public void onEdit(Shop shop) {
+                navigateToEditShop(shop);
+            }
+
+            @Override
+            public void onDelete(Shop shop) {
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Xác nhận xóa")
+                        .setMessage("Bạn có chắc chắn muốn xóa cửa hàng này?")
+                        .setPositiveButton("Xóa", (dialog, which) -> {
+                            shopViewModel.deleteShop(shop.getId());
+                            reloadShopList();
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        shopViewModel = new ViewModelProvider(this).get(ShopViewModel.class);
+
+        shopViewModel.shops.observe(getViewLifecycleOwner(), shops -> {
+            if (pageIndex == 0) {
+                adapter.setShopList(shops);
+            } else {
+                adapter.appendShopList(shops);
+            }
+            isLoadingMore = false;
+        });
+
+        shopViewModel.loading.observe(getViewLifecycleOwner(), isLoading ->
+                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE));
+
+        shopViewModel.errorMessage.observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null) {
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1) && !isLoadingMore) {
+                    isLoadingMore = true;
+                    pageIndex++;
+                    shopViewModel.loadShopsByOwner(pageIndex, pageSize);
+                }
+            }
+        });
+
+        btnAddShop.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(R.id.action_myShopList_to_shopFormFragment));
+
+        reloadShopList();
+    }
+
+    private void reloadShopList() {
+        pageIndex = 1;
+        isLoadingMore = false;
+        shopViewModel.loadShopsByOwner(pageIndex, pageSize);
+    }
+
+    private void navigateToEditShop(Shop shop) {
+        Bundle args = new Bundle();
+        args.putString("shopId", shop.getId());
+        NavHostFragment.findNavController(this).navigate(R.id.action_myShopList_to_shopFormFragment, args);
+    }
+}

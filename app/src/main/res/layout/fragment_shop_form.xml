@@ -1,0 +1,84 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Tên shop -->
+        <EditText
+            android:id="@+id/etName"
+            android:hint="Tên cửa hàng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Địa chỉ -->
+        <EditText
+            android:id="@+id/etAddress"
+            android:hint="Địa chỉ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Giờ mở cửa -->
+        <EditText
+            android:id="@+id/etOpenHours"
+            android:hint="Giờ mở cửa (HH:mm)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Giờ đóng cửa -->
+        <EditText
+            android:id="@+id/etEndHours"
+            android:hint="Giờ đóng cửa (HH:mm)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Ảnh đại diện -->
+        <Button
+            android:id="@+id/btnSelectImage"
+            android:text="Chọn ảnh bìa của hàng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/ivPreviewImage"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSubImages"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:orientation="horizontal" />
+
+        <!-- Ảnh phụ -->
+        <Button
+            android:id="@+id/btnSelectSubImages"
+            android:text="Chọn ảnh phụ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Submit -->
+        <Button
+            android:id="@+id/btnSubmit"
+            android:text="Lưu cửa hàng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <!-- Progress -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+</ScrollView>

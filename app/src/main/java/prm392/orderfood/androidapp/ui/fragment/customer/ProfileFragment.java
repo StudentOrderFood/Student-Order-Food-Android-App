@@ -75,6 +75,14 @@ public class ProfileFragment extends Fragment {
                         .load(userProfile.getAvatar()) // phải là URL hoặc uri hợp lệ
                         .placeholder(R.drawable.avatar) // fallback nếu không có ảnh
                         .into(binding.ivUserAvatar);
+                if ("ShopOwner".equalsIgnoreCase(userProfile.getRoleName())) {
+                    binding.llManageShops.setVisibility(View.VISIBLE);
+                    binding.llManageShops.setOnClickListener(v -> {
+                        navController.navigate(R.id.myShopListFragment);
+                    });
+                } else {
+                    binding.llManageShops.setVisibility(View.GONE);
+                }
             }
         });
     }

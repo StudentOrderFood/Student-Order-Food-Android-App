@@ -2,6 +2,8 @@ package prm392.orderfood.domain.models.shops;
 
 import java.util.List;
 
+import prm392.orderfood.domain.models.users.UserProfile;
+
 public class Shop {
     private String id;
     private String name;
@@ -12,6 +14,7 @@ public class Shop {
     private double rating;
     private String status;
     private String ownerId;
+    private UserProfile owner;
     private List<String> images;
 
     public Shop() {
@@ -95,5 +98,13 @@ public class Shop {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public UserProfile getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserProfile owner) {
+        this.owner = owner;
     }
 }

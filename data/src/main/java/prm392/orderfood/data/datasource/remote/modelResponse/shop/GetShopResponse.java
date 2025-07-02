@@ -2,6 +2,8 @@ package prm392.orderfood.data.datasource.remote.modelResponse.shop;
 
 import java.util.List;
 
+import prm392.orderfood.data.datasource.remote.modelResponse.user.GetUserResponse;
+
 public class GetShopResponse {
     private String id;
     private String name;
@@ -12,7 +14,8 @@ public class GetShopResponse {
     private double rating;
     private String status;
     private String ownerId;
-    private List<String> images;
+    private GetUserResponse owner;
+    private List<GetShopImageResponse> images;
 
     public GetShopResponse() {
     }
@@ -89,11 +92,19 @@ public class GetShopResponse {
         this.ownerId = ownerId;
     }
 
-    public List<String> getImages() {
+    public List<GetShopImageResponse> getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List<GetShopImageResponse> images) {
         this.images = images;
+    }
+
+    public GetUserResponse getOwner() {
+        return owner;
+    }
+
+    public void setOwner(GetUserResponse owner) {
+        this.owner = owner;
     }
 }

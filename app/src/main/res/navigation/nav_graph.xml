@@ -59,4 +59,17 @@
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/myShopListFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.MyShopListFragment"
+        android:label="Shops" />
+    <fragment
+        android:id="@+id/action_myShopList_to_shopFormFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.ShopFormFragment"
+        android:label="ShopFormFragment" >
+        <argument
+            android:name="shopId"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
 </navigation>

@@ -5,4 +5,5 @@
     <color name="primary_color">#ffa500</color>
     <color name="primary_color_transperent">#80FFA500</color>
     <color name="grey_400">#BDBDBD</color>
+    <color name="teal_700">#00796B</color>
 </resources>

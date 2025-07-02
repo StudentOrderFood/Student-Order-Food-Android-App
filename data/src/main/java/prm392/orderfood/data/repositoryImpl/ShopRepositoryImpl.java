@@ -1,6 +1,9 @@
 package prm392.orderfood.data.repositoryImpl;
 
+import android.util.Log;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,9 +66,30 @@ public class ShopRepositoryImpl implements ShopRepository {
     public Single<List<Shop>> getShopsByOwner(int pageIndex, int pageSize) {
         return dataSource.getShopsByOwner(pageIndex, pageSize)
                 .map(Response::body)
-                .map(ApiResponse::getData)
-                .map(PagingResponse::getItems)
-                .map(ShopMapper::toDomainList) // list mapping
+                .map(apiResponse -> {
+                    if (apiResponse == null) {
+                        Log.e("ShopRepo", "apiResponse is null");
+                        return new ArrayList<GetShopResponse>();
+                    }
+
+                    if (!apiResponse.isSuccess()) {
+                        Log.e("ShopRepo", "API returned unsuccessful: " + apiResponse.getMessage());
+                        return new ArrayList<GetShopResponse>();
+                    }
+
+                    if (apiResponse.getData() == null) {
+                        Log.e("ShopRepo", "apiResponse.getData() is null");
+                        return new ArrayList<GetShopResponse>();
+                    }
+
+                    if (apiResponse.getData().getItems() == null) {
+                        Log.e("ShopRepo", "getItems() is null");
+                        return new ArrayList<GetShopResponse>();
+                    }
+
+                    return apiResponse.getData().getItems();
+                })
+                .map(ShopMapper::toDomainList)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -73,8 +97,12 @@ public class ShopRepositoryImpl implements ShopRepository {
     public Single<Shop> getShopById(String shopId) {
         return dataSource.getShopById(shopId)
                 .map(Response::body)
-                .map(ApiResponse::getData)
-                .map(ShopMapper::toDomain)
+                .flatMap(apiResponse -> {
+                    if (apiResponse == null || !apiResponse.isSuccess() || apiResponse.getData() == null) {
+                        return Single.error(new IllegalStateException("Không tìm thấy shop hoặc API thất bại"));
+                    }
+                    return Single.just(ShopMapper.toDomain(apiResponse.getData()));
+                })
                 .subscribeOn(Schedulers.io());
     }
 

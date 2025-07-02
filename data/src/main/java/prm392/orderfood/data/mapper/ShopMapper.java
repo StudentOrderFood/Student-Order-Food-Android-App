@@ -3,6 +3,7 @@ package prm392.orderfood.data.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopImageResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
 import prm392.orderfood.domain.models.shops.Shop;
 
@@ -21,16 +22,28 @@ public class ShopMapper {
         shop.setRating(response.getRating());
         shop.setStatus(response.getStatus());
         shop.setOwnerId(response.getOwnerId());
-        shop.setImages(response.getImages()); // assuming this is a list of string URLs
+        if (response.getOwner() != null) {
+            shop.setOwner(UserMapper.mapToUserProfileDomain(response.getOwner()));
+        }
+        List<String> subImages = new ArrayList<>();
+        if (response.getImages() != null) {
+            for (GetShopImageResponse img : response.getImages()) {
+                subImages.add(img.getImageUrl());
+            }
+        }
+        shop.setImages(subImages);
 
         return shop;
     }
 
     public static List<Shop> toDomainList(List<GetShopResponse> responseList) {
         List<Shop> shops = new ArrayList<>();
-        if (responseList != null) {
+        if (responseList != null && !responseList.isEmpty()) {
             for (GetShopResponse response : responseList) {
-                shops.add(toDomain(response));
+                Shop shop = toDomain(response);
+                if (shop != null) {
+                    shops.add(shop);
+                }
             }
         }
         return shops;
