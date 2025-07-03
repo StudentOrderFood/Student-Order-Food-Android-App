@@ -37,6 +37,7 @@ public class MyShopListFragment extends Fragment {
     private int pageIndex = 1;
     private final int pageSize = 10;
     private boolean isLoadingMore = false;
+    private Shop pendingDeleteShop = null;
 
     @Nullable
     @Override
@@ -62,20 +63,21 @@ public class MyShopListFragment extends Fragment {
                         .setTitle("Xác nhận xóa")
                         .setMessage("Bạn có chắc chắn muốn xóa cửa hàng này?")
                         .setPositiveButton("Xóa", (dialog, which) -> {
+                            pendingDeleteShop = shop;
                             shopViewModel.deleteShop(shop.getId());
-                            reloadShopList();
                         })
                         .setNegativeButton("Hủy", null)
                         .show();
             }
         });
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
         shopViewModel = new ViewModelProvider(this).get(ShopViewModel.class);
 
+        // Observe shop list
         shopViewModel.shops.observe(getViewLifecycleOwner(), shops -> {
-            if (pageIndex == 0) {
+            if (pageIndex == 1) {
                 adapter.setShopList(shops);
             } else {
                 adapter.appendShopList(shops);
@@ -83,15 +85,28 @@ public class MyShopListFragment extends Fragment {
             isLoadingMore = false;
         });
 
-        shopViewModel.loading.observe(getViewLifecycleOwner(), isLoading ->
-                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE));
+        // Observe loading
+        shopViewModel.loading.observe(getViewLifecycleOwner(), isLoading -> {
+            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        });
 
+        // Observe error
         shopViewModel.errorMessage.observe(getViewLifecycleOwner(), msg -> {
             if (msg != null) {
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Observe delete success
+        shopViewModel.actionSuccess.observe(getViewLifecycleOwner(), success -> {
+            if (Boolean.TRUE.equals(success) && pendingDeleteShop != null) {
+                adapter.removeShop(pendingDeleteShop);
+                pendingDeleteShop = null;
+                Toast.makeText(requireContext(), "Xóa thành công!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Infinite scroll
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -103,6 +118,7 @@ public class MyShopListFragment extends Fragment {
             }
         });
 
+        // Navigate add
         btnAddShop.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(R.id.action_myShopList_to_shopFormFragment));
 

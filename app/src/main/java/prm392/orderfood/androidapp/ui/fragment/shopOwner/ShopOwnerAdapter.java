@@ -44,6 +44,14 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
         notifyItemRangeInserted(start, shops.size());
     }
 
+    public void removeShop(Shop shop) {
+        int index = shopList.indexOf(shop);
+        if (index != -1) {
+            shopList.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

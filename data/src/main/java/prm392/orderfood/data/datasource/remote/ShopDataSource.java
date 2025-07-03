@@ -91,7 +91,7 @@ public class ShopDataSource {
         );
     }
 
-    public Single<Response<ApiResponse<Void>>> deleteShop(String shopId) {
+    public Single<Response<ApiResponse<String>>> deleteShop(String shopId) {
         return api.deleteShop(shopId);
     }
 

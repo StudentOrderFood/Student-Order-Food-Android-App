@@ -22,17 +22,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Giờ mở cửa -->
         <EditText
             android:id="@+id/etOpenHours"
             android:hint="Giờ mở cửa (HH:mm)"
+            android:focusable="false"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Giờ đóng cửa -->
         <EditText
             android:id="@+id/etEndHours"
             android:hint="Giờ đóng cửa (HH:mm)"
+            android:focusable="false"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

@@ -45,7 +45,7 @@ public interface ShopApiService {
     );
 
     @DELETE("api/v1/shops")
-    Single<Response<ApiResponse<Void>>> deleteShop(
+    Single<Response<ApiResponse<String>>> deleteShop(
             @Query("shopId") String shopId
     );
 

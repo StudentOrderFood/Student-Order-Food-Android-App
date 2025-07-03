@@ -1,10 +1,10 @@
 package prm392.orderfood.androidapp.ui.fragment.shopOwner;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -119,7 +120,7 @@ public class ShopFormFragment extends Fragment {
     }
 
     private void checkEditMode() {
-        editingShopId = null; // Reset before checking
+        editingShopId = null;
         Bundle args = getArguments();
         if (args != null) {
             String id = args.getString("shopId");
@@ -184,12 +185,17 @@ public class ShopFormFragment extends Fragment {
             subImagePickerLauncher.launch(intent);
         });
 
+        etOpenHours.setOnClickListener(v -> showTimePickerDialog(etOpenHours));
+        etEndHours.setOnClickListener(v -> showTimePickerDialog(etEndHours));
+
         btnSubmit.setOnClickListener(v -> {
+            if (!validateForm()) return;
+
             Shop shop = new Shop();
-            shop.setName(etName.getText().toString());
-            shop.setAddress(etAddress.getText().toString());
-            shop.setOpenHours(etOpenHours.getText().toString());
-            shop.setEndHours(etEndHours.getText().toString());
+            shop.setName(etName.getText().toString().trim());
+            shop.setAddress(etAddress.getText().toString().trim());
+            shop.setOpenHours(etOpenHours.getText().toString().trim());
+            shop.setEndHours(etEndHours.getText().toString().trim());
 
             if (editingShopId != null && !editingShopId.isEmpty()) {
                 shop.setId(editingShopId);
@@ -199,5 +205,45 @@ public class ShopFormFragment extends Fragment {
             }
         });
     }
-}
 
+    private void showTimePickerDialog(EditText target) {
+        final Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(),
+                (view, hourOfDay, minute1) -> {
+                    String formattedTime = String.format("%02d:%02d", hourOfDay, minute1);
+                    target.setText(formattedTime);
+                }, hour, minute, true);
+        timePickerDialog.show();
+    }
+
+    private boolean validateForm() {
+        if (etName.getText().toString().trim().isEmpty()) {
+            etName.setError("Vui lòng nhập tên cửa hàng");
+            etName.requestFocus();
+            return false;
+        }
+        if (etAddress.getText().toString().trim().isEmpty()) {
+            etAddress.setError("Vui lòng nhập địa chỉ");
+            etAddress.requestFocus();
+            return false;
+        }
+        if (etOpenHours.getText().toString().trim().isEmpty()) {
+            etOpenHours.setError("Vui lòng chọn giờ mở cửa");
+            etOpenHours.requestFocus();
+            return false;
+        }
+        if (etEndHours.getText().toString().trim().isEmpty()) {
+            etEndHours.setError("Vui lòng chọn giờ đóng cửa");
+            etEndHours.requestFocus();
+            return false;
+        }
+        if (imageFile == null && editingShopId == null) {
+            Toast.makeText(requireContext(), "Vui lòng chọn ảnh bìa cửa hàng", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+}
