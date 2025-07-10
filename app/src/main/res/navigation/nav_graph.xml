@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_phoneInputFragment"
+            app:destination="@id/phoneInputFragment" />
     </fragment>
 
     <action
@@ -58,18 +61,24 @@
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_phoneInputFragment"
+            app:destination="@id/phoneInputFragment" />
     </fragment>
     <fragment
-        android:id="@+id/myShopListFragment"
-        android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.MyShopListFragment"
-        android:label="Shops" />
+        android:id="@+id/otpFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.auth.OtpFragment"
+        android:label="OtpFragment" >
+        <action
+            android:id="@+id/action_otpFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/action_myShopList_to_shopFormFragment"
-        android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.ShopFormFragment"
-        android:label="ShopFormFragment" >
-        <argument
-            android:name="shopId"
-            app:argType="string"
-            android:defaultValue="" />
+        android:id="@+id/phoneInputFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.auth.PhoneInputFragment"
+        android:label="PhoneInputFragment" >
+        <action
+            android:id="@+id/action_phoneInputFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
     </fragment>
 </navigation>
