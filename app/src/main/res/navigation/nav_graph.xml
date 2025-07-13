@@ -70,8 +70,8 @@
         android:name="prm392.orderfood.androidapp.ui.fragment.auth.OtpFragment"
         android:label="OtpFragment" >
         <action
-            android:id="@+id/action_otpFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_otpFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/phoneInputFragment"
@@ -81,4 +81,16 @@
             android:id="@+id/action_phoneInputFragment_to_otpFragment"
             app:destination="@id/otpFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/myShopListFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.MyShopListFragment"
+        android:label="MyShopListFragment" >
+        <action
+            android:id="@+id/action_myShopListFragment_to_shopFormFragment"
+            app:destination="@id/shopFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shopFormFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.ShopFormFragment"
+        android:label="ShopFormFragment" />
 </navigation>

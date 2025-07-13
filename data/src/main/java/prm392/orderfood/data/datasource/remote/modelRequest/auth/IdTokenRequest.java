@@ -1,4 +1,4 @@
-package prm392.orderfood.data.datasource.remote.modelRequest;
+package prm392.orderfood.data.datasource.remote.modelRequest.auth;
 
 public class IdTokenRequest {
     private String idToken;

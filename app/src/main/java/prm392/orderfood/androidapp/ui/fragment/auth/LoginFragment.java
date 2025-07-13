@@ -48,6 +48,9 @@ public class LoginFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
     private ActivityResultLauncher<Intent> signInActivityResultLauncher;
 
+    private NavController navController;
+
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -97,6 +100,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        navController = Navigation.findNavController(requireView());
         setupObservers();
         setupListeners();
     }
@@ -133,7 +137,9 @@ public class LoginFragment extends Fragment {
                 Token token = ((SignInState.Success) state).getToken();
 //                Log.d(TAG, "Login success: " + token.getAccessToken());
                 Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show();
-                navigateToHome();
+                // Navigate to home fragment
+                navController.navigate(R.id.action_loginFragment_to_homeFragment);
+
                 mUserViewModel.fetchUserProfile(); // Fetch user profile after login
             } else if (state instanceof SignInState.Error) {
                 String error = ((SignInState.Error) state).getErrorMessage();
@@ -141,9 +147,24 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
+
+        authViewModel.getNavigateTo().observe(getViewLifecycleOwner(), destination -> {
+            if (destination != null) {
+                switch (destination) {
+                    case "phone_verification":
+                        navController.navigate(R.id.action_loginFragment_to_phoneInputFragment);
+                        break;
+                    case "home":
+                        navController.navigate(R.id.action_loginFragment_to_homeFragment);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
-    private  void setupTVSignUpListener() {
+    private void setupTVSignUpListener() {
         binding.tvSignUp.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(R.id.action_loginFragment_to_registerFragment);
@@ -165,37 +186,27 @@ public class LoginFragment extends Fragment {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            String idToken = account.getIdToken();
-
-            if (idToken != null) {
-                authViewModel.loginWithGoogle(idToken); // Truyền trực tiếp lên BE, KHÔNG dùng FirebaseAuth nữa
-//                Log.d(TAG, "Google Sign In successful, got ID Token.");
-//                // Signin với Firebase trước
-//                AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-//                FirebaseAuth.getInstance().signInWithCredential(credential)
-//                        .addOnCompleteListener(task -> {
-//                            if (task.isSuccessful()) {
-//                                Log.d(TAG, "Firebase Sign In successful.");
-//                                // Sau khi Firebase Sign In thành công, gửi ID Token đến server
-//                                authViewModel.loginWithGoogle();
-//                            } else {
-//                                Log.w(TAG, "Firebase Sign In failed", task.getException());
-//                                authViewModel.handleSignInError(task.getException().getLocalizedMessage());
-//                            }
-//                        });
-            } else {
-                Log.w(TAG, "Google Sign In successful, but ID Token is null.");
-                authViewModel.handleSignInError("ID Token is null");
-            }
+            signInWithGoogleAccount(account);
         } catch (ApiException e) {
             Log.w(TAG, "Google sign in failed", e);
             authViewModel.handleSignInError(e.getLocalizedMessage());
         }
     }
 
-    private void navigateToHome() {
-        NavController navController = Navigation.findNavController(requireView());
-        navController.navigate(R.id.action_loginFragment_to_homeFragment);
+    private void signInWithGoogleAccount(GoogleSignInAccount account) {
+        String idToken = account.getIdToken();
+        String email = account.getEmail();
+
+        if (email == null || !email.endsWith(".edu.vn")) {
+            Toast.makeText(requireContext(), "Please use a valid .edu.vn email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (idToken != null) {
+            authViewModel.loginWithGoogle(email, idToken);
+        } else {
+            authViewModel.handleSignInError("ID Token is null");
+        }
     }
 
     @Override
