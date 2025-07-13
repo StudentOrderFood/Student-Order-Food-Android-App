@@ -33,4 +33,39 @@ public class UserRepositoryImpl implements UserRepository {
                     }
                 });
     }
+
+    @Override
+    public Single<Response<String>> updateUserProfile(UserProfile userProfile) {
+        userProfile.setUserId(tokenLocalDataSource.getUserId());
+        return userDataSource.updateUserProfile(userProfile)
+                .map(response -> {
+                    boolean success = response.isSuccess();
+                    if (success) {
+                        return Response.success("User profile updated successfully");
+                    } else {
+                        String errorMessage = response.getMessage() != null ? response.getMessage() : "Failed to update user profile";
+                        return Response.error(400, okhttp3.ResponseBody.create(errorMessage, null));
+                    }
+                });
+    }
+
+    @Override
+    public Single<Response<String>> checkPhoneNumberExists(String phoneNumber) {
+        return userDataSource.checkPhoneNumberExists(phoneNumber)
+                .map(response -> {
+                    // Success = exists
+                    // Failure = does not exist
+                    boolean success = response.isSuccess();
+                    if (success) {
+                        if (response.getMessage() != null && response.getMessage().equals("Phone number already exists")) {
+                            return Response.success("Phone number already exists");
+                        } else {
+                            return Response.success("Phone number does not exist");
+                        }
+                    } else {
+                        String errorMessage = response.getMessage() != null ? response.getMessage() : "Phone number does not exist";
+                        return Response.error(400, okhttp3.ResponseBody.create(errorMessage, null));
+                    }
+                });
+    }
 }

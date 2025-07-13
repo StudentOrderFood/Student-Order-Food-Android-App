@@ -8,9 +8,18 @@ public interface UserRepository {
     /**
      * Retrieves the user profile for a given user ID.
      *
-     * @param userId The ID of the user whose profile is to be retrieved.
      * @return A Single that emits a Response containing the UserProfile object if successful,
      *         or an error if the retrieval fails.
      */
     Single<Response<UserProfile>> getUserProfile();
+
+    /**
+     * Updates the user profile with the provided UserProfile object.
+     *
+     * @param userProfile The UserProfile object containing updated user information.
+     * @return A Single that emits a Response containing the updated UserProfile object if successful,
+     *         or an error if the update fails.
+     */
+    Single<Response<String>> updateUserProfile(UserProfile userProfile);
+    Single<Response<String>> checkPhoneNumberExists(String phoneNumber);
 }

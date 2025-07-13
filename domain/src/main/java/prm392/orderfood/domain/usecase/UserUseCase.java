@@ -19,4 +19,14 @@ public class UserUseCase {
         return userRepository.getUserProfile()
                 .subscribeOn(Schedulers.io());
     }
+
+    public Single<Response<String>> updateUserProfile(UserProfile userProfile) {
+        return userRepository.updateUserProfile(userProfile)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<Response<String>> checkPhoneNumberExists(String phoneNumber) {
+        return userRepository.checkPhoneNumberExists(phoneNumber)
+                .subscribeOn(Schedulers.io());
+    }
 }

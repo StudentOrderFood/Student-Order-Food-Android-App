@@ -153,10 +153,39 @@
                         android:textSize="16sp" />
 
                     <ImageView
+                        android:id="@+id/ivArrowPersonalInfo"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_arrow_forward"
                         app:tint="#999999" />
+                </LinearLayout>
+                <!-- Hidden Expandable Layout -->
+                <LinearLayout
+                    android:id="@+id/layoutPersonalInfoDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvNameHidden"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Name: Tina Pham" />
+
+                    <TextView
+                        android:id="@+id/tvPhoneHidden"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone: 0912345678" />
+
+                    <TextView
+                        android:id="@+id/tvEmailHidden"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Email: tina.pham@email.com" />
                 </LinearLayout>
 
                 <!-- Addresses -->
@@ -190,10 +219,27 @@
                         android:textSize="16sp" />
 
                     <ImageView
+                        android:id="@+id/ivArrowAddresses"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_arrow_forward"
                         app:tint="#999999" />
+                </LinearLayout>
+                <!-- Hidden Expandable Layout for Addresses -->
+                <LinearLayout
+                    android:id="@+id/layoutAddressesDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvAddressHidden"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address 1: 123 Main St, City, Country" />
                 </LinearLayout>
 
                 <!-- Shops -->
@@ -382,6 +428,143 @@
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
+        <!-- CardView: Update Required -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewUpdateRequired"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <!-- Tiêu đề -->
+                <TextView
+                    android:id="@+id/tvUpdateRequiredTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="⚠️ Missing information"
+                    android:textColor="#D32F2F"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <!-- Update Phone Number -->
+                <LinearLayout
+                    android:id="@+id/llUpdatePhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_update"
+                        app:tint="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="Update Phone Number"
+                        android:textColor="#FF5722"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/ivArrowPhone"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#999999" />
+                </LinearLayout>
+
+                <!-- Update Address -->
+                <LinearLayout
+                    android:id="@+id/llUpdateAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_add_location"
+                        app:tint="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="Update Address"
+                        android:textColor="#FF5722"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/ivArrowAddress"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#999999" />
+                </LinearLayout>
+
+                <!-- Expandable Address Input Form -->
+                <LinearLayout
+                    android:id="@+id/layoutAddressForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/etAddressInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter address"
+                        android:inputType="textPostalAddress" />
+
+                    <Button
+                        android:id="@+id/btnSaveAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Save Address" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
 
         <!-- Log Out -->
         <androidx.cardview.widget.CardView

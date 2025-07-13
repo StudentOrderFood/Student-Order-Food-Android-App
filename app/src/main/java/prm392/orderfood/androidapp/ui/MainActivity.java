@@ -41,7 +41,14 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setVisibility(View.GONE);
             } else if (destination.getId() == R.id.introFragment) {
                 bottomNavigationView.setVisibility(View.GONE);
-            } else {
+            } else if (destination.getId() == R.id.registerFragment) {
+                bottomNavigationView.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.phoneInputFragment) {
+                bottomNavigationView.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.otpFragment) {
+                bottomNavigationView.setVisibility(View.GONE);
+            }
+            else {
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
         });

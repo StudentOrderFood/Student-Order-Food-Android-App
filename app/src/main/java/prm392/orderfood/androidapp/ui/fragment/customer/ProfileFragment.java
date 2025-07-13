@@ -1,9 +1,13 @@
 package prm392.orderfood.androidapp.ui.fragment.customer;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,18 +19,22 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.FragmentProfileMenuBinding;
+import prm392.orderfood.androidapp.utils.PhoneNumberUtils;
 import prm392.orderfood.androidapp.viewModel.AuthViewModel;
 import prm392.orderfood.androidapp.viewModel.UserViewModel;
+import prm392.orderfood.domain.models.users.UserProfile;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private FragmentProfileMenuBinding binding;
     private UserViewModel mUserViewModel;
     private AuthViewModel mAuthViewModel;
-    NavController navController;
+    private NavController navController;
 
 
     public ProfileFragment() {
@@ -83,10 +91,42 @@ public class ProfileFragment extends Fragment {
                 } else {
                     binding.llManageShops.setVisibility(View.GONE);
                 }
+
+                // Hiển thị Card Missing information
+                if (userProfile.getPhone() == null || userProfile.getPhone().isEmpty() || userProfile.getAddress() == null || userProfile.getAddress().isEmpty()) {
+                    binding.cardViewUpdateRequired.setVisibility(View.VISIBLE);
+                } else {
+                    binding.cardViewUpdateRequired.setVisibility(View.GONE);
+                }
+                if (userProfile.getAddress() != null && !userProfile.getAddress().isEmpty()) {
+                    binding.llUpdateAddress.setVisibility(View.GONE);
+                } else {
+                    binding.llUpdateAddress.setVisibility(View.VISIBLE);
+                }
+                if (userProfile.getPhone() != null && !userProfile.getPhone().isEmpty()) {
+                    binding.llUpdatePhone.setVisibility(View.GONE);
+                } else {
+                    binding.llUpdatePhone.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        mUserViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "setupObservers: " + errorMessage);
+            }
+        });
+
+        mUserViewModel.getUpdateStatus().observe(getViewLifecycleOwner(), updateStatus -> {
+            if (updateStatus) {
+                Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+//                mUserViewModel.fetchUserProfile(); // Refresh thông tin người dùng
             }
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void setupEvents() {
 //        binding.ivBack.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
         binding.ivBack.setOnClickListener(v ->
@@ -103,9 +143,116 @@ public class ProfileFragment extends Fragment {
                         navOptions
                 );
 
-                Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Logout successfully", Toast.LENGTH_SHORT).show();
             });
         });
 
+        // setup click listener cho các mục trong profile
+        UserProfile userProfile = mUserViewModel.getUserProfileLiveData().getValue();
+        // Mục Personal Information
+        binding.llPersonalInfo.setOnClickListener(v -> {
+            if (userProfile == null) {
+                Toast.makeText(requireContext(), "Information not loaded yet, please wait a moment", Toast.LENGTH_SHORT).show();
+                return;
+            }
+//            Check nếu chưa có số điện thoại thì bắt cập nhật
+            if (userProfile.getPhone() == null || userProfile.getPhone().isEmpty()) {
+                Toast.makeText(requireContext(), "Please update your phone number first", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            toggleVisibility(binding.layoutPersonalInfoDetails, binding.ivArrowPersonalInfo);
+            binding.tvNameHidden.setText("Name: " + userProfile.getFullName());
+            binding.tvEmailHidden.setText("Email: " + userProfile.getEmail());
+            binding.tvPhoneHidden.setText("Phone: " + userProfile.getPhone());
+        });
+
+        // Mục Address
+        binding.llAddresses.setOnClickListener(v -> {
+            if (userProfile == null) {
+                Toast.makeText(requireContext(), "Information not loaded yet, please wait a moment", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // Check nếu chưa có địa chỉ thì bắt cập nhật
+            if (userProfile.getAddress() == null || userProfile.getAddress().isEmpty()) {
+                Toast.makeText(requireContext(), "Please update your address first", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            toggleVisibility(binding.layoutAddressesDetails, binding.ivArrowAddresses);
+            binding.tvAddressHidden.setText("Address: " + userProfile.getAddress());
+        });
+
+        // Mục Update Address and Phone
+        binding.llUpdateAddress.setOnClickListener(v -> {
+            toggleVisibility(binding.layoutAddressForm, binding.ivArrowAddress);
+        });
+
+        binding.btnSaveAddress.setOnClickListener(v -> {
+            String address = binding.etAddressInput.getText().toString().trim();
+            if (address.isEmpty()) {
+                Toast.makeText(requireContext(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                if (userProfile != null) {
+                    userProfile.setAddress(address);
+//                    mUserViewModel.setUserProfileLiveData(userProfile);
+//                    Gson gson = new GsonBuilder().serializeNulls().create();
+//                    Log.d("UpdateDebug", gson.toJson(userProfile));
+                    mUserViewModel.updateUserProfile(userProfile);
+                }
+
+                // Ẩn form sau khi cập nhật
+                if (binding.layoutAddressForm.getVisibility() == View.VISIBLE) {
+                    toggleVisibility(binding.layoutAddressForm, binding.ivArrowAddress);
+                }
+            }
+        });
+
+        binding.llUpdatePhone.setOnClickListener(v -> {
+//            toggleVisibility(binding.layoutPhoneForm, binding.ivArrowPhone);
+            navController.navigate(R.id.action_profileFragment_to_phoneInputFragment);
+        });
+
+
+//        binding.btnSavePhone.setOnClickListener(v -> {
+//            String phone = binding.etPhoneInput.getText().toString().trim();
+//            if (phone.isEmpty()) {
+//                Toast.makeText(requireContext(), "Phone cannot be empty", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            if (!PhoneNumberUtils.isValidPhoneNumber(phone)) {
+//                Toast.makeText(requireContext(), "Invalid phone number format", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            if (userProfile != null) {
+//                userProfile.setPhone(phone);
+////                mUserViewModel.setUserProfileLiveData(userProfile);
+////                mUserViewModel.updatePhoneNumber(userProfile);
+//            }
+//
+//            // Ẩn form sau khi cập nhật
+//            if (binding.layoutPhoneForm.getVisibility() == View.VISIBLE) {
+//                toggleVisibility(binding.layoutPhoneForm, binding.ivArrowPhone);
+//            }
+//            Toast.makeText(requireContext(), "Saved: " + phone, Toast.LENGTH_SHORT).show();
+//
+//        });
+
+    }
+
+    private void toggleVisibility(View targetLayout, ImageView arrowIcon) {
+
+//        // Áp dụng transition cho parent của target layout
+//        ViewGroup parent = (ViewGroup) targetLayout.getParent();
+//        TransitionManager.beginDelayedTransition(parent);
+
+        if (targetLayout.getVisibility() == View.GONE) {
+            targetLayout.setVisibility(View.VISIBLE);
+            arrowIcon.setImageResource(R.drawable.ic_arrow_downward); // icon hướng xuống
+        } else {
+            targetLayout.setVisibility(View.GONE);
+            arrowIcon.setImageResource(R.drawable.ic_arrow_forward); // icon hướng sang
+        }
     }
 }
