@@ -120,7 +120,7 @@ public class MyShopListFragment extends Fragment {
 
         // Navigate add
         btnAddShop.setOnClickListener(v -> NavHostFragment.findNavController(this)
-                .navigate(R.id.action_myShopListFragment_to_shopFormFragment));
+                .navigate(R.id.action_myShopList_to_shopFormFragment));
 
         reloadShopList();
     }
@@ -134,6 +134,6 @@ public class MyShopListFragment extends Fragment {
     private void navigateToEditShop(Shop shop) {
         Bundle args = new Bundle();
         args.putString("shopId", shop.getId());
-        NavHostFragment.findNavController(this).navigate(R.id.action_myShopListFragment_to_shopFormFragment, args);
+        NavHostFragment.findNavController(this).navigate(R.id.action_myShopList_to_shopFormFragment, args);
     }
 }

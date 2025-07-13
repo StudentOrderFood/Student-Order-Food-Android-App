@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import prm392.orderfood.data.datasource.remote.modelRequest.auth.RegisterRequest;
+import prm392.orderfood.data.datasource.remote.modelRequest.RegisterRequest;
 import prm392.orderfood.data.datasource.remote.modelResponse.user.GetUserResponse;
 import prm392.orderfood.domain.models.users.UserProfile;
 import prm392.orderfood.domain.models.users.UserRegister;

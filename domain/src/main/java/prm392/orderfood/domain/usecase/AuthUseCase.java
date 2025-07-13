@@ -36,13 +36,4 @@ public class AuthUseCase {
     public Single<Response<Token>> shopOwnerLogin(String identifier, String password) {
         return authRepository.shopOwnerLogin(identifier, password);
     }
-
-    public Single<Boolean> isEmailRegistered(String email) {
-        return authRepository.isEmailRegistered(email);
-    }
-
-    public Single<Boolean> registerEmail(String email, String idToken, String phoneNumber) {
-        return authRepository.registerEmail(email, idToken, phoneNumber);
-    }
-
 }

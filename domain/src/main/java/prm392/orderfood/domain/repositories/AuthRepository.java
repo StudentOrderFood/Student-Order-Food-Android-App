@@ -41,6 +41,4 @@ public interface AuthRepository {
      */
     Single<Response<String>> registerShopOwner(UserRegister userRegister);
     Single<Response<Token>> shopOwnerLogin(String identifier, String password);
-    Single<Boolean> isEmailRegistered(String email);
-    Single<Boolean> registerEmail(String email, String idToken, String phoneNumber);
 }
