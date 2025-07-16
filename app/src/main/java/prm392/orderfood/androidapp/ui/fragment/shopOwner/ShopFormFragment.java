@@ -28,6 +28,7 @@ import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import prm392.orderfood.androidapp.R;
+import prm392.orderfood.androidapp.ui.adapter.SubImageAdapter;
 import prm392.orderfood.androidapp.utils.FileUtils;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.domain.models.shops.Shop;

@@ -2,6 +2,7 @@ package prm392.orderfood.androidapp.ui.fragment.shopOwner;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,21 +17,22 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import prm392.orderfood.androidapp.R;
+import prm392.orderfood.androidapp.databinding.FragmentOwnerShopListBinding;
+import prm392.orderfood.androidapp.ui.adapter.ShopOwnerAdapter;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.domain.models.shops.Shop;
 
 @AndroidEntryPoint
 public class MyShopListFragment extends Fragment {
+    private static final String TAG = "MyShopListFragment";
+    private FragmentOwnerShopListBinding binding;
 
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private FloatingActionButton btnAddShop;
     private ShopViewModel shopViewModel;
     private ShopOwnerAdapter adapter;
 
@@ -42,14 +44,16 @@ public class MyShopListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_owner_shop_list, container, false);
+        binding = FragmentOwnerShopListBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.recyclerViewMyShop);
         progressBar = view.findViewById(R.id.progressBarMyShop);
-        btnAddShop = view.findViewById(R.id.btnAddShop);
+        shopViewModel = new ViewModelProvider(requireActivity()).get(ShopViewModel.class);
+
 
         adapter = new ShopOwnerAdapter(new ArrayList<>(), new ShopOwnerAdapter.OnShopActionListener() {
             @Override
@@ -69,11 +73,15 @@ public class MyShopListFragment extends Fragment {
                         .setNegativeButton("Hủy", null)
                         .show();
             }
+
+            @Override
+            public void onShopSelected(Shop shop) {
+                navToShopDetail(shop);
+            }
         });
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        shopViewModel = new ViewModelProvider(this).get(ShopViewModel.class);
 
         // Observe shop list
         shopViewModel.shops.observe(getViewLifecycleOwner(), shops -> {
@@ -119,7 +127,7 @@ public class MyShopListFragment extends Fragment {
         });
 
         // Navigate add
-        btnAddShop.setOnClickListener(v -> NavHostFragment.findNavController(this)
+        binding.btnAddShop.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(R.id.action_myShopListFragment_to_shopFormFragment));
 
         reloadShopList();
@@ -135,5 +143,11 @@ public class MyShopListFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString("shopId", shop.getId());
         NavHostFragment.findNavController(this).navigate(R.id.action_myShopListFragment_to_shopFormFragment, args);
+    }
+
+    private void navToShopDetail(Shop shop) {
+        shopViewModel.setSelectedShop(shop.getId());
+        Log.d(TAG, "navToShopDetail: " + shop.getId());
+        NavHostFragment.findNavController(this).navigate(R.id.action_myShopListFragment_to_shopDetailFragment);
     }
 }

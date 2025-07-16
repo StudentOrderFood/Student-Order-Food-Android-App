@@ -32,6 +32,7 @@ public interface AuthRepository {
      * @return A Task that emits true if the token is valid, false otherwise.
      */
     Single<Response<Boolean>> validateAccessToken();
+    String getCurrentUserRole();
     /**
      * Registers a new shop owner with the provided registration details.
      *

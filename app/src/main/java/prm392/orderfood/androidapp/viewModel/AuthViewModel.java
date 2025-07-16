@@ -1,8 +1,16 @@
 package prm392.orderfood.androidapp.viewModel;
 
+import android.util.Base64;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import org.json.JSONObject;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -13,6 +21,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import prm392.orderfood.androidapp.ui.states.SignInState;
 import prm392.orderfood.androidapp.ui.states.SignUpState;
+import prm392.orderfood.domain.models.auth.Token;
 import prm392.orderfood.domain.models.users.UserRegister;
 import prm392.orderfood.domain.usecase.AuthUseCase;
 
@@ -38,6 +47,12 @@ public class AuthViewModel extends ViewModel {
         return mSignUpState;
     }
 
+    // MutableLiveData để lưu trữ role của user hiện tại sau khi login
+    private MutableLiveData<String> userRole = new MutableLiveData<>();
+    public LiveData<String> getUserRole() {
+        return userRole;
+    }
+
     @Inject
     public AuthViewModel(AuthUseCase authUseCase) {
         this.mAuthUseCase = authUseCase;
@@ -52,7 +67,9 @@ public class AuthViewModel extends ViewModel {
                 .subscribe(
                         response -> {
                             if (response.isSuccessful() && response.body() != null) {
-                                mSignInState.setValue(new SignInState.Success(response.body()));
+                                Token token = response.body();
+                                mSignInState.setValue(new SignInState.Success(token));
+                                userRole.setValue("Student");
                             } else if (response.errorBody() != null) {
                                 mSignInState.setValue(new SignInState.Error(response.errorBody().string()));
                             } else {
@@ -78,6 +95,7 @@ public class AuthViewModel extends ViewModel {
                 .subscribe(response -> {
                     if (response.isSuccessful() && response.body() != null) {
                         mSignInState.setValue(new SignInState.Success(response.body()));
+                        userRole.setValue("ShopOwner"); // Set user role to ShopOwner
                     } else if (response.errorBody() != null) {
                         mSignInState.setValue(new SignInState.Error(response.errorBody().string()));
                     } else {
@@ -100,7 +118,15 @@ public class AuthViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread()) // Observe on main thread for UI
                 .subscribe(response -> {
                     if (Boolean.TRUE.equals(response.body())) {
-                        navigateTo.setValue("home");
+                        userRole.setValue(mAuthUseCase.getCurrentUserRole());
+                        if (Objects.requireNonNull(userRole.getValue()).equalsIgnoreCase("ShopOwner")) {
+                            navigateTo.setValue("shopList");
+                        } else if (userRole.getValue().equalsIgnoreCase("Student")) {
+                            navigateTo.setValue("home");
+                        } else {
+                            Log.e("AuthViewModel", "Unknown user role: " + userRole.getValue());
+                            navigateTo.setValue("login");
+                        }
                     } else {
                         navigateTo.setValue("login");
                     }

@@ -7,9 +7,13 @@ import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import prm392.orderfood.data.repositoryImpl.AuthRepositoryImpl;
+import prm392.orderfood.data.repositoryImpl.CategoryRepositoryImpl;
+import prm392.orderfood.data.repositoryImpl.MenuItemRepositoryImpl;
 import prm392.orderfood.data.repositoryImpl.ShopRepositoryImpl;
 import prm392.orderfood.data.repositoryImpl.UserRepositoryImpl;
 import prm392.orderfood.domain.repositories.AuthRepository;
+import prm392.orderfood.domain.repositories.CategoryRepository;
+import prm392.orderfood.domain.repositories.MenuItemRepository;
 import prm392.orderfood.domain.repositories.ShopRepository;
 import prm392.orderfood.domain.repositories.UserRepository;
 
@@ -27,4 +31,12 @@ public abstract class RepositoryModule {
     @Binds
     @Singleton
     public abstract ShopRepository bindShopRepository(ShopRepositoryImpl impl);
+
+    @Binds
+    @Singleton
+    public abstract CategoryRepository bindCategoryRepository(CategoryRepositoryImpl impl);
+
+    @Binds
+    @Singleton
+    public abstract MenuItemRepository bindMenuItemRepository(MenuItemRepositoryImpl impl);
 }

@@ -14,9 +14,11 @@ import prm392.orderfood.data.datasource.remote.ShopDataSource;
 import prm392.orderfood.data.datasource.remote.modelRequest.shop.ApproveShopRequest;
 import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.PagingResponse;
+import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
 import prm392.orderfood.data.mapper.ShopMapper;
 import prm392.orderfood.domain.models.shops.Shop;
+import prm392.orderfood.domain.models.shops.ShopDetailResponse;
 import prm392.orderfood.domain.repositories.ShopRepository;
 import retrofit2.Response;
 
@@ -113,6 +115,21 @@ public class ShopRepositoryImpl implements ShopRepository {
                 .subscribeOn(Schedulers.io());
     }
 
+    @Override
+    public Single<ShopDetailResponse> getShopDetail(String shopId) {
+        return dataSource.getShopDetail(shopId)
+                .map(Response::body)
+                .flatMap(apiResponse -> {
+                    if (apiResponse == null || !apiResponse.isSuccess() || apiResponse.getData() == null) {
+                        return Single.error(new IllegalStateException("Shop detail not found or API failed"));
+                    }
+                    GetShopDetailResponse shopDetail = apiResponse.getData();
+                    ShopDetailResponse shop = ShopMapper.toDomain(shopDetail);
+                    return Single.just(shop);
+                })
+                .subscribeOn(Schedulers.io());
+    }
+
     // Admin
     @Override
     public Single<List<Shop>> getShopsByStatus(String status, int pageIndex, int pageSize) {
@@ -131,4 +148,6 @@ public class ShopRepositoryImpl implements ShopRepository {
                 .map(Response::isSuccessful)
                 .subscribeOn(Schedulers.io());
     }
+
+
 }

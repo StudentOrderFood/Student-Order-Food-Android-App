@@ -36,4 +36,8 @@ public class AuthUseCase {
     public Single<Response<Token>> shopOwnerLogin(String identifier, String password) {
         return authRepository.shopOwnerLogin(identifier, password);
     }
+
+    public String getCurrentUserRole() {
+        return authRepository.getCurrentUserRole();
+    }
 }

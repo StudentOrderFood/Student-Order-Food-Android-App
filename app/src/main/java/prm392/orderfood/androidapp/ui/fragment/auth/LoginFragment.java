@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import org.json.JSONObject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import prm392.orderfood.androidapp.R;
@@ -47,6 +50,8 @@ public class LoginFragment extends Fragment {
     private UserViewModel mUserViewModel;
     private GoogleSignInClient mGoogleSignInClient;
     private ActivityResultLauncher<Intent> signInActivityResultLauncher;
+    private NavController navController;
+
 
     public LoginFragment() {
         // Required empty public constructor
@@ -97,6 +102,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        navController = Navigation.findNavController(requireView());
         setupObservers();
         setupListeners();
     }
@@ -130,15 +136,28 @@ public class LoginFragment extends Fragment {
             }
 
             if (state instanceof SignInState.Success) {
-                Token token = ((SignInState.Success) state).getToken();
-//                Log.d(TAG, "Login success: " + token.getAccessToken());
+//                Token token = ((SignInState.Success) state).getToken();
                 Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show();
-                navigateToHome();
                 mUserViewModel.fetchUserProfile(); // Fetch user profile after login
             } else if (state instanceof SignInState.Error) {
                 String error = ((SignInState.Error) state).getErrorMessage();
 //                Log.e(TAG, "Login error: " + error);
                 Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        authViewModel.getUserRole().observe(getViewLifecycleOwner(), role -> {
+            String userRole = authViewModel.getUserRole().getValue();
+            if (userRole == null || userRole.isEmpty()) {
+                Log.e(TAG, "UserRole is not set, error in here");
+                return;
+            }
+            if (userRole.equalsIgnoreCase("ShopOwner")) {
+                // Navigate to ShopOwnerHomeFragment
+                navController.navigate(R.id.action_loginFragment_to_myShopListFragment);
+            } else if (userRole.equalsIgnoreCase("Student")) {
+                // Navigate to CustomerHomeFragment
+                navController.navigate(R.id.action_loginFragment_to_homeFragment);
             }
         });
     }
@@ -191,11 +210,6 @@ public class LoginFragment extends Fragment {
             Log.w(TAG, "Google sign in failed", e);
             authViewModel.handleSignInError(e.getLocalizedMessage());
         }
-    }
-
-    private void navigateToHome() {
-        NavController navController = Navigation.findNavController(requireView());
-        navController.navigate(R.id.action_loginFragment_to_homeFragment);
     }
 
     @Override

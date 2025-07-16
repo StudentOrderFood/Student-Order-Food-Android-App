@@ -8,6 +8,7 @@ import okhttp3.RequestBody;
 import prm392.orderfood.data.datasource.remote.modelRequest.shop.ApproveShopRequest;
 import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.PagingResponse;
+import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -70,5 +71,10 @@ public interface ShopApiService {
     @POST("api/v1/shops/approve-reject")
     Single<Response<ApiResponse<String>>> approveOrRejectShop(
             @Body ApproveShopRequest request
+    );
+
+    @GET("api/v1/shops/detail/{shopId}")
+    Single<Response<ApiResponse<GetShopDetailResponse>>> getShopDetail(
+            @Path("shopId") String shopId
     );
 }

@@ -1,4 +1,4 @@
-package prm392.orderfood.androidapp.ui.fragment.shopOwner;
+package prm392.orderfood.androidapp.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

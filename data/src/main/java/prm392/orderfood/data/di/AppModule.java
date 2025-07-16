@@ -20,6 +20,8 @@ import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.api.AuthApiService;
+import prm392.orderfood.data.datasource.remote.api.CategoryApiService;
+import prm392.orderfood.data.datasource.remote.api.MenuItemApiService;
 import prm392.orderfood.data.datasource.remote.api.ShopApiService;
 import prm392.orderfood.data.datasource.remote.api.UserApiService;
 import prm392.orderfood.data.network.AuthInterceptor;
@@ -100,5 +102,17 @@ public class AppModule {
     @Provides
     public ShopApiService provideShopApiService(Retrofit retrofit) {
         return retrofit.create(ShopApiService.class);
+    }
+
+    @Singleton
+    @Provides
+    public CategoryApiService provideCategoryApiService(Retrofit retrofit) {
+        return retrofit.create(CategoryApiService.class);
+    }
+
+    @Singleton
+    @Provides
+    public MenuItemApiService provideMenuItemApiService(Retrofit retrofit) {
+        return retrofit.create(MenuItemApiService.class);
     }
 }

@@ -15,13 +15,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import prm392.orderfood.domain.models.menuItem.MenuItem;
 import prm392.orderfood.domain.models.shops.Shop;
+import prm392.orderfood.domain.models.shops.ShopDetailResponse;
+import prm392.orderfood.domain.usecase.MenuItemUseCase;
 import prm392.orderfood.domain.usecase.ShopUseCase;
 
 @HiltViewModel
 public class ShopViewModel extends ViewModel {
 
     private final ShopUseCase shopUseCase;
+    private final MenuItemUseCase mMenuItemUseCase;
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     private final MutableLiveData<List<Shop>> _shops = new MutableLiveData<>();
@@ -39,9 +43,22 @@ public class ShopViewModel extends ViewModel {
     private final MutableLiveData<String> _errorMessage = new MutableLiveData<>();
     public LiveData<String> errorMessage = _errorMessage;
 
+    private final MutableLiveData<String> selectedShop = new MutableLiveData<>();
+    public LiveData<String> getSelectedShop() {
+        return selectedShop;
+    }
+    public void setSelectedShop(String shopId) {
+        selectedShop.setValue(shopId);
+    }
+
+    private final MutableLiveData<ShopDetailResponse> _shopDetailResponse = new MutableLiveData<>();
+    public LiveData<ShopDetailResponse> getShopDetailResponse() {
+        return _shopDetailResponse;
+    }
     @Inject
-    public ShopViewModel(ShopUseCase shopUseCase) {
+    public ShopViewModel(ShopUseCase shopUseCase, MenuItemUseCase menuItemUseCase) {
         this.shopUseCase = shopUseCase;
+        this.mMenuItemUseCase = menuItemUseCase;
     }
 
     public void loadShopsByStatus(String status, int pageIndex, int pageSize) {
@@ -142,6 +159,22 @@ public class ShopViewModel extends ViewModel {
         );
     }
 
+    public void getShopDetail(String shopId) {
+        _loading.setValue(true);
+        disposables.add(
+                shopUseCase.getShopDetail(shopId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                shopDetailResponse -> {
+                                    _shopDetailResponse.setValue(shopDetailResponse);
+                                    _loading.setValue(false);
+                                },
+                                error -> handleError("Get shop detail", error)
+                        )
+        );
+    }
+
     public void approveOrRejectShop(String shopId, boolean isApproved) {
         _loading.setValue(true);
         disposables.add(
@@ -156,6 +189,23 @@ public class ShopViewModel extends ViewModel {
                                 error -> handleError("Approve/Reject shop", error)
                         )
         );
+    }
+
+    public void addItemToShop(MenuItem menuItem, File imgFile) {
+        _loading.setValue(true);
+        disposables.add(
+                mMenuItemUseCase.createMenuItem(menuItem, imgFile)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                success -> {
+                                    _loading.setValue(false);
+                                    _shopDetailResponse.getValue().getMenuItems().add(success.body());
+                                },
+                                error -> handleError("Add item to shop", error)
+                        )
+        );
+
     }
 
     private void handleError(String source, Throwable error) {

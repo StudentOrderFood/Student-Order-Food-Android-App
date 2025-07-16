@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import prm392.orderfood.domain.models.shops.Shop;
+import prm392.orderfood.domain.models.shops.ShopDetailResponse;
 import prm392.orderfood.domain.repositories.ShopRepository;
 
 public class ShopUseCase {
@@ -53,6 +54,11 @@ public class ShopUseCase {
 
     public Single<Boolean> deleteShop(String shopId) {
         return shopRepository.deleteShop(shopId)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<ShopDetailResponse> getShopDetail(String shopId) {
+        return shopRepository.getShopDetail(shopId)
                 .subscribeOn(Schedulers.io());
     }
 }

@@ -69,6 +69,11 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
+    public String getCurrentUserRole() {
+        return tokenLocalDataSource.getUserRole(); // Return null or empty string if no token is available
+    }
+
+    @Override
     public Single<Response<String>> registerShopOwner(UserRegister register) {
         return authDataSource.registerShopOwner(UserMapper.mapToRegisterRequest(register))
                 .subscribeOn(Schedulers.io())

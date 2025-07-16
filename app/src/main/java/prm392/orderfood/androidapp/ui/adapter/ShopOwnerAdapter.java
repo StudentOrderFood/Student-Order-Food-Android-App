@@ -1,4 +1,4 @@
-package prm392.orderfood.androidapp.ui.fragment.shopOwner;
+package prm392.orderfood.androidapp.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +26,7 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
     public interface OnShopActionListener {
         void onEdit(Shop shop);
         void onDelete(Shop shop);
+        void onShopSelected(Shop shop);
     }
 
     public ShopOwnerAdapter(List<Shop> shopList, OnShopActionListener actionListener) {
@@ -76,6 +77,7 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
         // 👇 Gán sự kiện cho nút Sửa và Xóa
         holder.btnEdit.setOnClickListener(v -> actionListener.onEdit(shop));
         holder.btnDelete.setOnClickListener(v -> actionListener.onDelete(shop));
+        holder.itemView.setOnClickListener(v -> actionListener.onShopSelected(shop));
     }
 
     @Override

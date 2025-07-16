@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 import prm392.orderfood.domain.models.shops.Shop;
+import prm392.orderfood.domain.models.shops.ShopDetailResponse;
 
 public interface ShopRepository {
 
@@ -20,4 +21,6 @@ public interface ShopRepository {
     Single<List<Shop>> getShopsByOwner(int pageIndex, int pageSize);
     Single<Shop> getShopById(String shopId);
     Single<Boolean> deleteShop(String shopId); // ShopOwner
+
+    Single<ShopDetailResponse> getShopDetail(String shopId);
 }

@@ -14,6 +14,7 @@ import prm392.orderfood.data.datasource.remote.api.ShopApiService;
 import prm392.orderfood.data.datasource.remote.modelRequest.shop.ApproveShopRequest;
 import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.PagingResponse;
+import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
 import retrofit2.Response;
 
@@ -109,5 +110,9 @@ public class ShopDataSource {
 
     public Single<Response<ApiResponse<String>>> approveOrRejectShop(ApproveShopRequest request) {
         return api.approveOrRejectShop(request);
+    }
+
+    public Single<Response<ApiResponse<GetShopDetailResponse>>> getShopDetail(String shopId) {
+        return api.getShopDetail(shopId);
     }
 }
