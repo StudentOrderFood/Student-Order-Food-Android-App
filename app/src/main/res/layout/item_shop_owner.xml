@@ -23,7 +23,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tên cửa hàng"
+            android:text="Shop name"
             android:textStyle="bold"
             android:textSize="16sp" />
 
@@ -31,21 +31,21 @@
             android:id="@+id/tvShopAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Địa chỉ"
+            android:text="Shop address"
             android:textColor="#666" />
 
         <TextView
             android:id="@+id/tvOpenHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Giờ mở cửa: 07:00 - 22:00"
+            android:text="Open: 07:00 - 22:00"
             android:textColor="#444" />
 
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trạng thái: Pending"
+            android:text="Status: Pending"
             android:textColor="@android:color/holo_orange_dark" />
 
         <LinearLayout

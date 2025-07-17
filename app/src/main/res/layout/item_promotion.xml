@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Giảm giá đặc biệt"
+                android:text="Special Discount"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Cho đơn hàng đầu tiên"
+                android:text="For your first order"
                 android:textColor="#E0FFFFFF"
                 android:textSize="13sp" />
 

@@ -10,9 +10,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_150"
-        android:background="@drawable/login_background"
-        />
+        android:layout_height="188dp"
+        android:background="@drawable/banner" />
 
     <LinearLayout
         android:layout_width="match_parent"

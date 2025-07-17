@@ -1,89 +1,142 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!-- Main ScrollView -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Tên shop -->
-        <EditText
-            android:id="@+id/etName"
-            android:hint="Tên cửa hàng"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <!-- Địa chỉ -->
-        <EditText
-            android:id="@+id/etAddress"
-            android:hint="Địa chỉ"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <!-- Shop Name -->
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Shop Name"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/etOpenHours"
-            android:hint="Giờ mở cửa (HH:mm)"
-            android:focusable="false"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <!-- Address -->
+            <EditText
+                android:id="@+id/etAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Address"
+                app:layout_constraintTop_toBottomOf="@id/etName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/etEndHours"
-            android:hint="Giờ đóng cửa (HH:mm)"
-            android:focusable="false"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <!-- Open Hours -->
+            <EditText
+                android:id="@+id/etOpenHours"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Open Hours (HH:mm)"
+                android:focusable="false"
+                android:clickable="true"
+                app:layout_constraintTop_toBottomOf="@id/etAddress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Ảnh đại diện -->
-        <Button
-            android:id="@+id/btnSelectImage"
-            android:text="Chọn ảnh bìa của hàng"
-            android:backgroundTint="@color/primary_color"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <!-- Close Hours -->
+            <EditText
+                android:id="@+id/etEndHours"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Close Hours (HH:mm)"
+                android:focusable="false"
+                android:clickable="true"
+                app:layout_constraintTop_toBottomOf="@id/etOpenHours"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageView
-            android:id="@+id/ivPreviewImage"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone" />
+            <!-- Select Cover Image Button -->
+            <Button
+                android:id="@+id/btnSelectImage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/primary_color"
+                android:text="Select Shop Cover Image"
+                app:layout_constraintTop_toBottomOf="@id/etEndHours"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSubImages"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            android:orientation="horizontal" />
+            <!-- Preview Image -->
+            <ImageView
+                android:id="@+id/ivPreviewImage"
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/btnSelectImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Ảnh phụ -->
-        <Button
-            android:id="@+id/btnSelectSubImages"
-            android:text="Chọn ảnh phụ"
-            android:layout_width="match_parent"
-            android:backgroundTint="@color/primary_color"
-            android:layout_height="wrap_content" />
+            <!-- Sub Images RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSubImages"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/ivPreviewImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Submit -->
-        <Button
-            android:id="@+id/btnSubmit"
-            android:backgroundTint="@color/primary_color"
-            android:text="Lưu cửa hàng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            <!-- Select Sub Images Button -->
+            <Button
+                android:id="@+id/btnSelectSubImages"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/primary_color"
+                android:text="Select Additional Images"
+                app:layout_constraintTop_toBottomOf="@id/rvSubImages"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Progress -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
-</ScrollView>
+            <!-- Submit Button -->
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/primary_color"
+                android:text="Save Shop"
+                app:layout_constraintTop_toBottomOf="@id/btnSelectSubImages"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Progress Bar -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/btnSubmit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

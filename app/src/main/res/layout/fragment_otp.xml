@@ -8,9 +8,9 @@
 
     <LinearLayout
         android:id="@+id/topBackground"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/height_150"
-        android:background="@drawable/login_background"
+        android:layout_width="413dp"
+        android:layout_height="191dp"
+        android:background="@drawable/banner"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
