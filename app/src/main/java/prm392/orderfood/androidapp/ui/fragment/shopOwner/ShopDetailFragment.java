@@ -33,6 +33,7 @@ import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.FragmentDetailShopBinding;
 import prm392.orderfood.androidapp.ui.adapter.CategoryAdapter;
 import prm392.orderfood.androidapp.ui.adapter.MenuItemAdapter;
+import prm392.orderfood.androidapp.viewModel.AuthViewModel;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.domain.models.category.CategoriesInShopMenu;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
@@ -43,10 +44,14 @@ public class ShopDetailFragment extends Fragment {
     public static final String TAG = "DetailShopFragment";
     private FragmentDetailShopBinding binding;
     private ShopViewModel mShopViewModel;
+    private AuthViewModel mAuthViewModel;
     private NavController navController;
 
     private RecyclerView recyclerCategory;
     private RecyclerView recyclerMenuItem;
+
+    private MenuItemAdapter menuItemAdapter;
+    private CategoryAdapter categoryAdapter;
 
     public ShopDetailFragment() {
         // Required empty public constructor
@@ -73,6 +78,7 @@ public class ShopDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mShopViewModel = new ViewModelProvider(requireActivity()).get(ShopViewModel.class);
+        mAuthViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         navController = Navigation.findNavController(requireView());
         recyclerCategory = binding.recyclerCategory;
         recyclerMenuItem = binding.recyclerMenuItems;
@@ -89,7 +95,6 @@ public class ShopDetailFragment extends Fragment {
         // Set up click listener for add product button
         binding.btnAddProd.setOnClickListener(v -> {
             // Navigate to add product screen
-            Toast.makeText(getContext(), "Navigate to Add Product", Toast.LENGTH_SHORT).show();
             navController.navigate(R.id.action_shopDetailFragment_to_addProductFragment);
         });
     }
@@ -189,18 +194,62 @@ public class ShopDetailFragment extends Fragment {
             // Set Category List
             List<CategoriesInShopMenu> categories = Optional.ofNullable(shopDetailResponse.getCategories())
                     .orElse(new ArrayList<>());
+            // Thêm Category đặc biệt "ALL" vào đầu danh sách
+            CategoriesInShopMenu allCategory = new CategoriesInShopMenu("ALL", "All");
+            categories.add(0, allCategory);
 
-            CategoryAdapter categoryAdapter = new CategoryAdapter(categories);
+            categoryAdapter = new CategoryAdapter(categories, categoryId -> {
+                List<MenuItemResponse> allItems = Optional.ofNullable(mShopViewModel.getShopDetailResponse().getValue().getMenuItems())
+                        .orElse(new ArrayList<>());
+                if ("ALL".equals(categoryId)) {
+                    // Nếu chọn "All", hiển thị toàn bộ món ăn
+                    menuItemAdapter.updateData(allItems);
+                    binding.tvCategoryTitle.setText("All (" + allItems.size() + ")"); // All (10)
+                } else {
+                    // Lọc theo category
+                    List<MenuItemResponse> filteredItems = new ArrayList<>();
+                    for (MenuItemResponse item : allItems) {
+                        if (categoryId.equals(item.getCategoryId())) {
+                            filteredItems.add(item);
+                        }
+                    }
+                    menuItemAdapter.updateData(filteredItems);
+                    String categoryName = categories.stream()
+                            .filter(category -> category.getId().equals(categoryId))
+                            .findFirst()
+                            .map(CategoriesInShopMenu::getName)
+                            .orElse("Unknown Category");
+                    binding.tvCategoryTitle.setText(categoryName + " (" + filteredItems.size() + ")");
+                }
+
+            });
             recyclerCategory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             recyclerCategory.setAdapter(categoryAdapter);
             // Set Menu Items
             List<MenuItemResponse> menuItems = Optional.ofNullable(shopDetailResponse.getMenuItems())
                     .orElse(new ArrayList<>());
             Log.d(TAG, "setUpObservers: Menu Items: " + menuItems.size());
-            MenuItemAdapter menuItemAdapter = new MenuItemAdapter(menuItems);
+            menuItemAdapter = new MenuItemAdapter(menuItems, mAuthViewModel.getUserRole().getValue() != null ? mAuthViewModel.getUserRole().getValue() : "Guest", new MenuItemAdapter.OnMenuItemActionListener() {
+                @Override
+                public void onUpdate(MenuItemResponse item) {
+                    mShopViewModel.setSelectedMenuItem(item);
+                    navController.navigate(R.id.action_shopDetailFragment_to_addProductFragment);
+                }
+
+                @Override
+                public void onDelete(MenuItemResponse item) {
+                    mShopViewModel.deleteMenuItem(item.getId());
+                }
+            });
             recyclerMenuItem.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerMenuItem.setAdapter(menuItemAdapter);
+            binding.tvCategoryTitle.setText("All (" + menuItems.size() + ")"); // All (10)
 
+        });
+
+
+        mShopViewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
         });
 
 

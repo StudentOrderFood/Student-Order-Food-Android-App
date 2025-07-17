@@ -3,26 +3,29 @@ package prm392.orderfood.androidapp.ui.adapter;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import prm392.orderfood.androidapp.databinding.ItemCategoryBinding;
 import prm392.orderfood.domain.models.category.CategoriesInShopMenu;
+import prm392.orderfood.domain.models.shops.Shop;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     private List<CategoriesInShopMenu> categoryList;
     private int selectedPosition = 0;
+    private final OnCategoryActionListener onCategoryActionListener;
 
-    public CategoryAdapter(List<CategoriesInShopMenu> categoryList) {
+    public CategoryAdapter(List<CategoriesInShopMenu> categoryList, OnCategoryActionListener onCategoryActionListener) {
         this.categoryList = categoryList;
+        this.onCategoryActionListener = onCategoryActionListener;
+    }
+
+    public interface OnCategoryActionListener {
+        void onClick(String categoryId);
     }
 
     @NonNull
@@ -56,7 +59,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             selectedPosition = position;
             notifyItemChanged(previous);
             notifyItemChanged(selectedPosition);
-            // TODO: callback xử lý click nếu cần
+
+            onCategoryActionListener.onClick(item.getId());
         });
     }
 

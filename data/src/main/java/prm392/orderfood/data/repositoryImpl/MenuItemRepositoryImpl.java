@@ -31,4 +31,33 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
                     }
                 });
     }
+
+    @Override
+    public Single<MenuItemResponse> updateMenuItem(String id, MenuItem menuItem, File img) {
+        return menuItemDataSource.updateMenuItem(id, menuItem, img)
+                .map(response -> {
+                    if(response.isSuccess()) {
+                        return response.getData();
+                    } else {
+                        String errorMessage = response.getMessage() != null ? response.getMessage() : "Failed to update menu item";
+                        throw new RuntimeException(errorMessage);
+                    }
+                });
+
+    }
+
+    @Override
+    public Single<String> deleteMenuItem(String menuItemId) {
+        return menuItemDataSource.deleteMenuItem(menuItemId)
+                .map(response -> {
+                    if(response.isSuccess()) {
+                        return "Delete menu item successfully";
+                    } else {
+                        String errorMessage = response.getMessage() != null ? response.getMessage() : "Failed to delete menu item";
+                        throw new RuntimeException(errorMessage);
+                    }
+                });
+    }
+
+
 }

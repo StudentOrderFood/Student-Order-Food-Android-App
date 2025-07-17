@@ -3,6 +3,7 @@ package prm392.orderfood.androidapp.ui;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -62,17 +63,25 @@ public class MainActivity extends AppCompatActivity {
 
     // Func handle bottom navigation item selection
     private boolean onNavigationItemSelected(int itemId) {
+        String role = mAuthViewModel.getUserRole().getValue();
+        if (role == null) {
+            Log.e(TAG, "onNavigationItemSelected: userRole is null");
+            Toast.makeText(this, "Please log in again", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         NavOptions navOptions = new NavOptions.Builder()
-                .setLaunchSingleTop(true)            // Không tạo fragment mới nếu đã ở đó
-//                .setPopUpTo(R.id.nav_graph, false)  // Xoá fragment cũ trong stack, giữ lại main_graph
+                .setLaunchSingleTop(true)
                 .build();
+
         if (itemId == R.id.navigation_home) {
-            if (Objects.requireNonNull(mAuthViewModel.getUserRole().getValue()).equalsIgnoreCase("ShopOwner")) {
+            if (role.equalsIgnoreCase("ShopOwner")) {
                 navController.navigate(R.id.action_global_shopListFragment, null, navOptions);
-            } else if (mAuthViewModel.getUserRole().getValue().equalsIgnoreCase("Student")) {
+            } else if (role.equalsIgnoreCase("Student")) {
                 navController.navigate(R.id.action_global_homeFragment, null, navOptions);
             } else {
-                Log.e(TAG, "onNavigationItemSelected: Unknown role");
+                Log.e(TAG, "onNavigationItemSelected: Unknown role: " + role);
+                Toast.makeText(this, "Unknown role: " + role, Toast.LENGTH_SHORT).show();
             }
             return true;
         } else if (itemId == R.id.navigation_profile) {

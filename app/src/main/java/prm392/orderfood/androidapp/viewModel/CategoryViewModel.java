@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import prm392.orderfood.androidapp.utils.SingleLiveEvent;
 import prm392.orderfood.domain.models.category.CategoryResponse;
 import prm392.orderfood.domain.usecase.CategoryUseCase;
 
@@ -37,10 +38,23 @@ public class CategoryViewModel extends ViewModel {
         return isLoading;
     }
 
-    private MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    public MutableLiveData<List<CategoryResponse>> allCategories = new MutableLiveData<>();
+    public LiveData<List<CategoryResponse>> getAllCategoriesLiveData() {
+        return allCategories;
+    }
+
+    private final SingleLiveEvent<String> errorMessage = new SingleLiveEvent<>();
+    private LiveData<String> getErrorMessageLiveData() {
+        return errorMessage;
+    }
 
     public LiveData<String> getErrorMessage() {
         return errorMessage;
+    }
+
+    private final SingleLiveEvent<String> toastMessage = new SingleLiveEvent<>();
+    public LiveData<String> getToastMessage() {
+        return toastMessage;
     }
 
     public void getAllCategories() {
@@ -60,6 +74,12 @@ public class CategoryViewModel extends ViewModel {
                                 }
                         )
         );
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mCompositeDisposable.clear(); // Giải phóng bộ nhớ khi ViewModel bị hủy
     }
 
 }

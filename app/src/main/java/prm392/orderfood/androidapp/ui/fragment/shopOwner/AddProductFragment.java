@@ -36,6 +36,7 @@ import prm392.orderfood.androidapp.viewModel.CategoryViewModel;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.domain.models.category.CategoryResponse;
 import prm392.orderfood.domain.models.menuItem.MenuItem;
+import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 
 public class AddProductFragment extends Fragment {
     private static final String TAG = "AddProductFragment";
@@ -45,6 +46,9 @@ public class AddProductFragment extends Fragment {
     private ShopViewModel mShopViewModel;
     private Uri selectedImageUri = null;
     private List<CategoryResponse> categoryList;
+
+    MenuItemResponse selectedItem;
+    boolean isEditMode;
 
     private final ActivityResultLauncher<Intent> pickImageLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -83,13 +87,15 @@ public class AddProductFragment extends Fragment {
         mShopViewModel = new ViewModelProvider(requireActivity()).get(ShopViewModel.class);
         navController = Navigation.findNavController(requireView());
 
+        selectedItem = mShopViewModel.getSelectedMenuItem().getValue();
+        isEditMode = selectedItem != null;
+
         binding.btnSubmit.setEnabled(false);
         binding.btnSubmit.setBackgroundColor(Color.GRAY);
         binding.btnCancel.setEnabled(false);
         binding.btnCancel.setBackgroundColor(Color.GRAY);
         binding.btnPickImage.setEnabled(false);
         binding.btnPickImage.setBackgroundColor(Color.GRAY);
-
 
         // Set up observers
         setUpObservers();
@@ -135,6 +141,37 @@ public class AddProductFragment extends Fragment {
             );
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             binding.spCategory.setAdapter(adapter);
+
+
+            // Move edit-mode logic here (after categories are loaded)
+            if (isEditMode && selectedItem != null) {
+                binding.etName.setText(selectedItem.getName());
+                binding.etDescription.setText(selectedItem.getDescription());
+                binding.etPrice.setText(String.valueOf(selectedItem.getPrice()));
+
+                Glide.with(requireContext())
+                        .load(selectedItem.getImageUrl())
+                        .centerCrop()
+                        .into(binding.ivPreview);
+
+                binding.ivPreview.setVisibility(View.VISIBLE);
+
+                int index = 0;
+                for (int i = 0; i < categoryList.size(); i++) {
+                    if (categoryList.get(i).getId().equals(selectedItem.getCategoryId())) {
+                        index = i;
+                        break;
+                    }
+                }
+                binding.spCategory.setSelection(index);
+            }
+        });
+
+        mShopViewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
+            if (message != null && !message.isEmpty()) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                navController.popBackStack();
+            }
         });
 
     }
@@ -157,14 +194,17 @@ public class AddProductFragment extends Fragment {
             String name = binding.etName.getText().toString().trim();
             String desc = binding.etDescription.getText().toString().trim();
             String priceStr = binding.etPrice.getText().toString().trim();
-            double price;
             boolean isAvailable = true;
-            if (name.isEmpty() || desc.isEmpty() || priceStr.isEmpty() || selectedImageUri == null) {
-                Toast.makeText(requireContext(), "Please fill all fields and select an image", Toast.LENGTH_SHORT).show();
+
+            // Kiểm tra các trường bắt buộc
+            boolean isMissingImage = !isEditMode && selectedImageUri == null;
+            if (name.isEmpty() || desc.isEmpty() || priceStr.isEmpty() || isMissingImage) {
+                Toast.makeText(requireContext(), "Please fill all fields" + (isMissingImage ? " and select an image" : ""), Toast.LENGTH_SHORT).show();
                 return;
             }
 
-
+            // Parse giá tiền
+            double price;
             try {
                 price = Double.parseDouble(priceStr);
             } catch (NumberFormatException e) {
@@ -172,6 +212,7 @@ public class AddProductFragment extends Fragment {
                 return;
             }
 
+            // Kiểm tra category
             int selectedIndex = binding.spCategory.getSelectedItemPosition();
             if (selectedIndex < 0 || categoryList == null) {
                 Toast.makeText(requireContext(), "Please select a category", Toast.LENGTH_SHORT).show();
@@ -185,13 +226,13 @@ public class AddProductFragment extends Fragment {
                 return;
             }
 
+            // Kiểm tra shop
             String shopId = mShopViewModel.getSelectedShop().getValue() != null ? mShopViewModel.getSelectedShop().getValue() : null;
             if (shopId == null || shopId.isEmpty()) {
                 Toast.makeText(requireContext(), "No shop selected", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            String imageUrl = selectedImageUri.toString();
 
             MenuItem newMenuItem = new MenuItem();
             newMenuItem.setName(name);
@@ -199,12 +240,28 @@ public class AddProductFragment extends Fragment {
             newMenuItem.setPrice(price);
             newMenuItem.setAvailable(isAvailable);
             newMenuItem.setCategoryId(categoryId);
-            newMenuItem.setImageUrl(imageUrl);
             newMenuItem.setShopId(shopId);
 
-            File imageFile = FileUtils.getFileFromUri(requireContext(), selectedImageUri);
+            // Chuyển ảnh URI thành file
+            File imageFile = null;
+            String imageUrl;
 
-            mShopViewModel.addItemToShop(newMenuItem, imageFile);
+            boolean pickedNewImage = selectedImageUri != null && "content".equals(selectedImageUri.getScheme());
+
+            if (pickedNewImage) {
+                // Chỉ chuyển thành file nếu là ảnh mới từ thư viện
+                imageFile = FileUtils.getFileFromUri(requireContext(), selectedImageUri);
+                imageUrl = "null"; // Server sẽ dùng imageFile để upload
+            } else {
+                imageUrl = selectedItem != null ? selectedItem.getImageUrl() : "null";
+            }
+            newMenuItem.setImageUrl(imageUrl);
+            // Nếu là cập nhật thì giữ lại ID cũ
+            if (isEditMode && selectedItem != null) {
+                mShopViewModel.updateItemToShop(selectedItem.getId(), newMenuItem, imageFile);
+            } else {
+                mShopViewModel.addItemToShop(newMenuItem, imageFile);
+            }
         });
     }
 

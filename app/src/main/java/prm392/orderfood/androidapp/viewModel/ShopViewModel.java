@@ -1,6 +1,9 @@
 package prm392.orderfood.androidapp.viewModel;
 
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -15,7 +19,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import prm392.orderfood.androidapp.utils.SingleLiveEvent;
 import prm392.orderfood.domain.models.menuItem.MenuItem;
+import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 import prm392.orderfood.domain.models.shops.Shop;
 import prm392.orderfood.domain.models.shops.ShopDetailResponse;
 import prm392.orderfood.domain.usecase.MenuItemUseCase;
@@ -55,6 +61,21 @@ public class ShopViewModel extends ViewModel {
     public LiveData<ShopDetailResponse> getShopDetailResponse() {
         return _shopDetailResponse;
     }
+
+    private final MutableLiveData<MenuItemResponse> selectedMenuItem = new MutableLiveData<>();
+    public LiveData<MenuItemResponse> getSelectedMenuItem() {
+        return selectedMenuItem;
+    }
+    public void setSelectedMenuItem(MenuItemResponse menuItem) {
+        selectedMenuItem.setValue(menuItem);
+    }
+
+    private final SingleLiveEvent<String> toastMessage = new SingleLiveEvent<>();
+    public LiveData<String> getToastMessage() {
+        return toastMessage;
+    }
+
+
     @Inject
     public ShopViewModel(ShopUseCase shopUseCase, MenuItemUseCase menuItemUseCase) {
         this.shopUseCase = shopUseCase;
@@ -200,12 +221,52 @@ public class ShopViewModel extends ViewModel {
                         .subscribe(
                                 success -> {
                                     _loading.setValue(false);
-                                    _shopDetailResponse.getValue().getMenuItems().add(success.body());
+                                    Objects.requireNonNull(_shopDetailResponse.getValue()).getMenuItems().add(success.body());
+                                    toastMessage.setValue("Menu item added successfully");
                                 },
                                 error -> handleError("Add item to shop", error)
                         )
         );
+    }
 
+    public void updateItemToShop(String id, MenuItem menuItem, File imgFile) {
+        _loading.setValue(true);
+        disposables.add(
+                mMenuItemUseCase.updateMenuItem(id, menuItem, imgFile)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                response -> {
+                                    _loading.setValue(false);
+                                    MenuItemResponse updatedItem = response;
+                                    ShopDetailResponse current = Objects.requireNonNull(_shopDetailResponse.getValue());
+                                    current.getMenuItems().removeIf(item -> item.getId().equals(updatedItem.getId()));
+                                    current.getMenuItems().add(updatedItem);
+                                    _shopDetailResponse.setValue(current);
+                                    toastMessage.setValue("Menu item updated successfully");
+                                },
+                                error -> handleError("Update item to shop", error)
+                        )
+        );
+    }
+
+    public void deleteMenuItem(String menuItemId) {
+        disposables.add(
+                mMenuItemUseCase.deleteMenuItem(menuItemId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                response -> {
+                                    ShopDetailResponse current = Objects.requireNonNull(_shopDetailResponse.getValue());
+                                    current.getMenuItems().removeIf(item -> item.getId().equals(menuItemId));
+                                    //Phải setValue lại để cập nhật UI
+                                    _shopDetailResponse.setValue(current);
+
+                                    toastMessage.setValue("Menu item deleted successfully");
+                                },
+                                error -> handleError("Delete menu item", error)
+                        )
+        );
     }
 
     private void handleError(String source, Throwable error) {

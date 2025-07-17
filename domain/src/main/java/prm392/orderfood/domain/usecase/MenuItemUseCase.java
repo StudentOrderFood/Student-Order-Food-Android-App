@@ -24,4 +24,14 @@ public class MenuItemUseCase {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Single<MenuItemResponse> updateMenuItem(String id, MenuItem menuItem, File img) {
+        return menuItemRepository.updateMenuItem(id, menuItem, img)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<String> deleteMenuItem(String menuItemId) {
+        return menuItemRepository.deleteMenuItem(menuItemId)
+                .subscribeOn(Schedulers.io());
+    }
+
 }

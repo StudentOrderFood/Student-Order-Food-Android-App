@@ -190,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:background="#FFFFFF"
                         android:padding="16dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@id/llPersonalInfo"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">

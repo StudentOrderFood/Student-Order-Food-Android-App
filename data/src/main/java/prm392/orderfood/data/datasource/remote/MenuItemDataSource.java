@@ -34,6 +34,24 @@ public class MenuItemDataSource {
         );
     }
 
+    public Single<ApiResponse<MenuItemResponse>> updateMenuItem(String id, MenuItem menuItem, File img) {
+        return api.updateMenuItem(
+                id,
+                toPart(menuItem.getName()),
+                toPart(menuItem.getDescription()),
+                toPart(String.valueOf(menuItem.getPrice())),
+                toPart(menuItem.getImageUrl()),
+                toPart(menuItem.isAvailable() ? "true" : "false"),
+                toPart(menuItem.getCategoryId()),
+                toPart(menuItem.getShopId()),
+                img != null ? toMultipartBody("image", img) : null
+        );
+    }
+
+    public Single<ApiResponse<String>> deleteMenuItem(String menuItemId) {
+        return api.deleteMenuItem(menuItemId);
+    }
+
     private MultipartBody.Part toMultipartBody(String name, File file) {
         RequestBody req = RequestBody.create(file, MediaType.parse("image/*"));
         return MultipartBody.Part.createFormData(name, file.getName(), req);

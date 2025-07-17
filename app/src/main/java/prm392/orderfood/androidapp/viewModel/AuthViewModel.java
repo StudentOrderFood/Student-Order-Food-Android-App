@@ -141,7 +141,8 @@ public class AuthViewModel extends ViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    mSignInState.setValue(new SignInState.Idle());
+                    mSignInState.setValue(null);
+                    userRole.setValue(null);
                     onSuccess.run(); // gọi callback logout thành công
                 }, throwable -> {
                     // Optional: xử lý lỗi nếu cần

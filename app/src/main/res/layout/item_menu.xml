@@ -126,7 +126,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:weightSum="1">
 
                 <TextView
                     android:id="@+id/tvPrice"
@@ -138,9 +139,12 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
+                <!-- Add to Cart -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cvAddToCart"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
                     app:cardCornerRadius="18dp"
                     app:cardElevation="4dp"
                     app:cardBackgroundColor="@color/primary_color">
@@ -152,7 +156,44 @@
                         android:src="@drawable/ic_add"
                         app:tint="@android:color/white" />
                 </androidx.cardview.widget.CardView>
+
+                <!-- Update Button -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvUpdate"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="#FFC107">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@android:color/white" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Delete Button -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvDelete"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="#F44336">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_delete"
+                        app:tint="@android:color/white" />
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
