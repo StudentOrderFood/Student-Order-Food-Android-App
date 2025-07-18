@@ -35,6 +35,7 @@ import prm392.orderfood.androidapp.ui.adapter.CategoryAdapter;
 import prm392.orderfood.androidapp.ui.adapter.MenuItemAdapter;
 import prm392.orderfood.androidapp.utils.CurrencyUtils;
 import prm392.orderfood.androidapp.viewModel.AuthViewModel;
+import prm392.orderfood.androidapp.viewModel.OrderViewModel;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.domain.models.category.CategoriesInShopMenu;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
@@ -46,6 +47,7 @@ public class ShopDetailFragment extends Fragment {
     private FragmentDetailShopBinding binding;
     private ShopViewModel mShopViewModel;
     private AuthViewModel mAuthViewModel;
+    private OrderViewModel mOrderViewModel;
     private NavController navController;
 
     private RecyclerView recyclerCategory;
@@ -82,6 +84,7 @@ public class ShopDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mShopViewModel = new ViewModelProvider(requireActivity()).get(ShopViewModel.class);
         mAuthViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        mOrderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
         navController = Navigation.findNavController(requireView());
         recyclerCategory = binding.recyclerCategory;
         recyclerMenuItem = binding.recyclerMenuItems;
@@ -92,9 +95,11 @@ public class ShopDetailFragment extends Fragment {
         binding.layoutSelectedProductInfo.setVisibility(View.GONE);
         binding.btnPlus.setVisibility(View.GONE);
         binding.btnMinus.setVisibility(View.GONE);
+        binding.layoutBottomAddToCart.setVisibility(View.GONE);
 
         if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
-            binding.layoutAddToCart.setVisibility(View.GONE);
+        } else {
+            binding.btnAddProd. setVisibility(View.GONE);
         }
     }
 
@@ -126,6 +131,24 @@ public class ShopDetailFragment extends Fragment {
 
         binding.layoutSelectedProductInfo.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Selected product: " + binding.tvSelectedProductName.getText(), Toast.LENGTH_SHORT).show();
+        });
+
+        binding.tvCloseSelectedProductLayout.setOnClickListener(v -> {
+            // Ẩn thông tin sản phẩm đã chọn
+            binding.layoutBottomAddToCart.setVisibility(View.GONE);
+        });
+
+        binding.btnAddToCart.setOnClickListener(v -> {
+            // Thêm sản phẩm vào giỏ hàng
+            MenuItemResponse selectedItem = mShopViewModel.getSelectedMenuItem().getValue();
+            if (selectedItem != null) {
+                mOrderViewModel.addItemToOrder(selectedItem, quantity);
+//                Toast.makeText(getContext(), "Added " + quantity + " " + selectedItem.getName() + " to cart", Toast.LENGTH_SHORT).show();
+                // Ẩn thông tin sản phẩm đã chọn
+                binding.layoutBottomAddToCart.setVisibility(View.GONE);
+            } else {
+                Toast.makeText(getContext(), "No product selected", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -258,7 +281,7 @@ public class ShopDetailFragment extends Fragment {
             // Set Menu Items
             List<MenuItemResponse> menuItems = Optional.ofNullable(shopDetailResponse.getMenuItems())
                     .orElse(new ArrayList<>());
-            Log.d(TAG, "setUpObservers: Menu Items: " + menuItems.size());
+//            Log.d(TAG, "setUpObservers: Menu Items: " + menuItems.size());
             menuItemAdapter = new MenuItemAdapter(menuItems, mAuthViewModel.getUserRole().getValue() != null ? mAuthViewModel.getUserRole().getValue() : "Guest", new MenuItemAdapter.OnMenuItemActionListener() {
                 @Override
                 public void onUpdate(MenuItemResponse item) {
@@ -277,17 +300,33 @@ public class ShopDetailFragment extends Fragment {
                         // Nếu là ShopOwner, không làm gì
                         return;
                     }
-                    handleSelectItem(item);
+//                    handleSelectItem(item);
+                    mShopViewModel.setSelectedMenuItem(item);
                 }
             });
             recyclerMenuItem.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerMenuItem.setAdapter(menuItemAdapter);
             binding.tvCategoryTitle.setText("All (" + menuItems.size() + ")"); // All (10)
 
+            mShopViewModel.getSelectedMenuItem().observe(getViewLifecycleOwner(), selectedItem -> {
+                if (selectedItem != null) {
+                    handleSelectItem(selectedItem);
+                } else {
+                    // Nếu không có sản phẩm nào được chọn, ẩn thông tin sản phẩm đã chọn
+                    binding.layoutSelectedProductInfo.setVisibility(View.GONE);
+                    binding.btnPlus.setVisibility(View.GONE);
+                    binding.btnMinus.setVisibility(View.GONE);
+                    binding.layoutBottomAddToCart.setVisibility(View.GONE);
+                }
+            });
+
         });
 
-
         mShopViewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        });
+
+        mOrderViewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
         });
     }
@@ -297,6 +336,8 @@ public class ShopDetailFragment extends Fragment {
         binding.layoutSelectedProductInfo.setVisibility(View.VISIBLE);
         binding.btnPlus.setVisibility(View.VISIBLE);
         binding.btnMinus.setVisibility(View.VISIBLE);
+        binding.layoutBottomAddToCart.setVisibility(View.VISIBLE);
+
         binding.tvSelectedProductName.setText(item.getName());
         binding.tvSelectedProductPrice.setText(CurrencyUtils.formatToVND(item.getPrice()));
         binding.tvSelectedProductDesc.setText(item.getDescription());
@@ -304,9 +345,6 @@ public class ShopDetailFragment extends Fragment {
         quantity = 1;
         binding.tvQuantity.setText(String.valueOf(quantity));
         updateTotalPrice(CurrencyUtils.parseVNDToRaw(binding.tvSelectedProductPrice.getText().toString()));
-
-        // Lưu thông tin sản phẩm đã chọn vào ViewModel
-//        mShopViewModel.setSelectedMenuItem(item);
     }
 
     private void updateTotalPrice(String price) {

@@ -377,6 +377,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
+            android:id="@+id/layoutBottomAddToCart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -387,14 +388,26 @@
                 android:id="@+id/layoutSelectedProductInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/margin_20"
-                android:paddingTop="8dp"
+                android:padding="8dp"
                 android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/tvCloseSelectedProductLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="X"
+                    android:textColor="@color/red"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tvSelectedProductName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
                     android:text="Tên món"
                     android:textColor="#2C1810"
                     android:textSize="16sp"
@@ -406,13 +419,14 @@
                     android:id="@+id/tvSelectedProductPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
                     android:text="10.000 VND"
+                    android:textColor="@color/primary_color"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/primary_color"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tvSelectedProductName" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/tvCloseSelectedProductLayout" />
 
                 <TextView
                     android:id="@+id/tvSelectedProductDesc"
@@ -420,6 +434,9 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:paddingStart="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="8dp"
                     android:text="Mô tả món ăn ở đây"
                     android:textColor="#666666"
                     android:textSize="13sp"
@@ -433,8 +450,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:paddingHorizontal="16dp">
+                android:paddingHorizontal="16dp"
+                android:paddingTop="5dp">
 
                 <!-- Quantity Selector -->
                 <androidx.cardview.widget.CardView
@@ -510,11 +527,11 @@
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="12dp"
+                    android:layout_marginBottom="@dimen/margin_10"
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/primary_color"
                     app:cardCornerRadius="24dp"
-                    app:cardElevation="4dp"
-                    android:layout_marginBottom="@dimen/margin_10">
+                    app:cardElevation="4dp">
 
                     <FrameLayout
                         android:id="@+id/btnAddToCart"

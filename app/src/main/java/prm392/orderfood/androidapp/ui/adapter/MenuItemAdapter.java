@@ -14,6 +14,7 @@ import java.util.List;
 
 import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.ItemMenuBinding;
+import prm392.orderfood.androidapp.utils.CurrencyUtils;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 
 public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHolder> {
@@ -51,7 +52,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
 
         holder.binding.tvName.setText(item.getName());
         holder.binding.tvDescription.setText(item.getDescription());
-        holder.binding.tvPrice.setText(item.getPrice() + " VND");
+        holder.binding.tvPrice.setText(CurrencyUtils.formatToVND(item.getPrice()));
         holder.binding.tvDescription.setText(item.getDescription());
 
         Glide.with(holder.itemView.getContext())
