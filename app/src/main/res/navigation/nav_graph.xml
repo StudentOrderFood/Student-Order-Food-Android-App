@@ -35,7 +35,11 @@
         android:id="@+id/homeFragment"
         android:name="prm392.orderfood.androidapp.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_shopDetailFragment"
+            app:destination="@id/shopDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="prm392.orderfood.androidapp.ui.fragment.customer.ProfileFragment"

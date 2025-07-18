@@ -30,6 +30,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
     public interface OnMenuItemActionListener {
         void onUpdate(MenuItemResponse item);
         void onDelete(MenuItemResponse item);
+        void onClick(MenuItemResponse item);
     }
 
     @NonNull
@@ -85,6 +86,12 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
             holder.binding.cvUpdate.setVisibility(View.GONE); // Ẩn
             holder.binding.cvDelete.setVisibility(View.GONE); // Ẩn
         }
+
+        holder.binding.getRoot().setOnClickListener(v -> {
+            if (onMenuItemActionListener != null) {
+                onMenuItemActionListener.onClick(item);
+            }
+        });
     }
 
     @Override

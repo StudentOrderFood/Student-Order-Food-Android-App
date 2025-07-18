@@ -10,6 +10,11 @@ public class CategoryResponse {
     public CategoryResponse() {
     }
 
+    public CategoryResponse(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public String getId() {
         return id;
     }

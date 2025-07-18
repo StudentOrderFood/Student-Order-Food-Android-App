@@ -17,6 +17,7 @@ import prm392.orderfood.data.datasource.remote.modelResponse.PagingResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
 import prm392.orderfood.data.mapper.ShopMapper;
+import prm392.orderfood.domain.models.shops.PopularShopResponse;
 import prm392.orderfood.domain.models.shops.Shop;
 import prm392.orderfood.domain.models.shops.ShopDetailResponse;
 import prm392.orderfood.domain.repositories.ShopRepository;
@@ -128,6 +129,20 @@ public class ShopRepositoryImpl implements ShopRepository {
                     return Single.just(shop);
                 })
                 .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Single<List<PopularShopResponse>> getPopularShops(String curTime) {
+        return dataSource.getPopularShops(curTime)
+                .subscribeOn(Schedulers.io())
+                .map(apiResponse -> {
+                    if (apiResponse == null || apiResponse.getData() == null) {
+                        Log.e("ShopRepo", "Popular shops API response is null or data is null");
+                        return new ArrayList<PopularShopResponse>();
+                    }
+                    return apiResponse.getData();
+                });
+
     }
 
     // Admin

@@ -20,9 +20,10 @@
             <ImageView
                 android:id="@+id/ivShopImage"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="150dp"
                 android:background="@drawable/bg_image_placeholder"
                 android:src="@drawable/highland"
+                android:adjustViewBounds="true"
                 android:scaleType="centerCrop"/>
 
             <!-- Favorite Button -->

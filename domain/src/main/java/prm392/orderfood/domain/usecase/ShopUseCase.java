@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import prm392.orderfood.domain.models.shops.PopularShopResponse;
 import prm392.orderfood.domain.models.shops.Shop;
 import prm392.orderfood.domain.models.shops.ShopDetailResponse;
 import prm392.orderfood.domain.repositories.ShopRepository;
@@ -59,6 +60,11 @@ public class ShopUseCase {
 
     public Single<ShopDetailResponse> getShopDetail(String shopId) {
         return shopRepository.getShopDetail(shopId)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<List<PopularShopResponse>> getPopularShops(String curTime) {
+        return shopRepository.getPopularShops(curTime)
                 .subscribeOn(Schedulers.io());
     }
 }

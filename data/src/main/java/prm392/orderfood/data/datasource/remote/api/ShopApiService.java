@@ -10,6 +10,7 @@ import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.PagingResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
+import prm392.orderfood.domain.models.shops.PopularShopResponse;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -76,5 +77,10 @@ public interface ShopApiService {
     @GET("api/v1/shops/detail/{shopId}")
     Single<Response<ApiResponse<GetShopDetailResponse>>> getShopDetail(
             @Path("shopId") String shopId
+    );
+
+    @GET("api/v1/shops/popular")
+    Single<ApiResponse<List<PopularShopResponse>>> getPopularShops(
+            @Query("currentTime") String currentTime
     );
 }

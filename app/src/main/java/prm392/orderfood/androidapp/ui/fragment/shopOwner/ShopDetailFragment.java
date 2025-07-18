@@ -33,6 +33,7 @@ import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.FragmentDetailShopBinding;
 import prm392.orderfood.androidapp.ui.adapter.CategoryAdapter;
 import prm392.orderfood.androidapp.ui.adapter.MenuItemAdapter;
+import prm392.orderfood.androidapp.utils.CurrencyUtils;
 import prm392.orderfood.androidapp.viewModel.AuthViewModel;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.domain.models.category.CategoriesInShopMenu;
@@ -52,6 +53,8 @@ public class ShopDetailFragment extends Fragment {
 
     private MenuItemAdapter menuItemAdapter;
     private CategoryAdapter categoryAdapter;
+
+    private int quantity = 1;
 
     public ShopDetailFragment() {
         // Required empty public constructor
@@ -84,6 +87,15 @@ public class ShopDetailFragment extends Fragment {
         recyclerMenuItem = binding.recyclerMenuItems;
         setUpObservers();
         setUpEvents();
+
+        // Mặc định ẩn thông tin sản phẩm đã chọn
+        binding.layoutSelectedProductInfo.setVisibility(View.GONE);
+        binding.btnPlus.setVisibility(View.GONE);
+        binding.btnMinus.setVisibility(View.GONE);
+
+        if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
+            binding.layoutAddToCart.setVisibility(View.GONE);
+        }
     }
 
     private void setUpEvents() {
@@ -96,6 +108,24 @@ public class ShopDetailFragment extends Fragment {
         binding.btnAddProd.setOnClickListener(v -> {
             // Navigate to add product screen
             navController.navigate(R.id.action_shopDetailFragment_to_addProductFragment);
+        });
+
+        binding.btnPlus.setOnClickListener(v -> {
+            quantity++;
+            binding.tvQuantity.setText(String.valueOf(quantity));
+            updateTotalPrice(CurrencyUtils.parseVNDToRaw(binding.tvSelectedProductPrice.getText().toString()));
+        });
+
+        binding.btnMinus.setOnClickListener(v -> {
+            if (quantity > 1) {
+                quantity--;
+                binding.tvQuantity.setText(String.valueOf(quantity));
+                updateTotalPrice(CurrencyUtils.parseVNDToRaw(binding.tvSelectedProductPrice.getText().toString()));
+            }
+        });
+
+        binding.layoutSelectedProductInfo.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Selected product: " + binding.tvSelectedProductName.getText(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -240,6 +270,15 @@ public class ShopDetailFragment extends Fragment {
                 public void onDelete(MenuItemResponse item) {
                     mShopViewModel.deleteMenuItem(item.getId());
                 }
+
+                @Override
+                public void onClick(MenuItemResponse item) {
+                    if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
+                        // Nếu là ShopOwner, không làm gì
+                        return;
+                    }
+                    handleSelectItem(item);
+                }
             });
             recyclerMenuItem.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             recyclerMenuItem.setAdapter(menuItemAdapter);
@@ -251,7 +290,32 @@ public class ShopDetailFragment extends Fragment {
         mShopViewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
         });
+    }
 
+    private void handleSelectItem(MenuItemResponse item) {
+        // Hiển thị thông tin sản phẩm đã chọn
+        binding.layoutSelectedProductInfo.setVisibility(View.VISIBLE);
+        binding.btnPlus.setVisibility(View.VISIBLE);
+        binding.btnMinus.setVisibility(View.VISIBLE);
+        binding.tvSelectedProductName.setText(item.getName());
+        binding.tvSelectedProductPrice.setText(CurrencyUtils.formatToVND(item.getPrice()));
+        binding.tvSelectedProductDesc.setText(item.getDescription());
+
+        quantity = 1;
+        binding.tvQuantity.setText(String.valueOf(quantity));
+        updateTotalPrice(CurrencyUtils.parseVNDToRaw(binding.tvSelectedProductPrice.getText().toString()));
+
+        // Lưu thông tin sản phẩm đã chọn vào ViewModel
+//        mShopViewModel.setSelectedMenuItem(item);
+    }
+
+    private void updateTotalPrice(String price) {
+        try {
+            int total = Integer.parseInt(price) * quantity;
+            binding.tvTotalPrice.setText(CurrencyUtils.formatToVND(total));
+        } catch (NumberFormatException e) {
+            binding.tvTotalPrice.setText("0 VND");
+        }
 
     }
 

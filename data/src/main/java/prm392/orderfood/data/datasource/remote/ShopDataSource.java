@@ -16,6 +16,7 @@ import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.PagingResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopDetailResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.shop.GetShopResponse;
+import prm392.orderfood.domain.models.shops.PopularShopResponse;
 import retrofit2.Response;
 
 public class ShopDataSource {
@@ -114,5 +115,9 @@ public class ShopDataSource {
 
     public Single<Response<ApiResponse<GetShopDetailResponse>>> getShopDetail(String shopId) {
         return api.getShopDetail(shopId);
+    }
+
+    public Single<ApiResponse<List<PopularShopResponse>>> getPopularShops(String curTime) {
+        return api.getPopularShops(curTime);
     }
 }

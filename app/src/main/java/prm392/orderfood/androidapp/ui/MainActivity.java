@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setVisibility(View.GONE);
             } else if (destination.getId() == R.id.otpFragment) {
                 bottomNavigationView.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.shopDetailFragment && "Student".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
+                bottomNavigationView.setVisibility(View.GONE);
             }
             else {
                 bottomNavigationView.setVisibility(View.VISIBLE);

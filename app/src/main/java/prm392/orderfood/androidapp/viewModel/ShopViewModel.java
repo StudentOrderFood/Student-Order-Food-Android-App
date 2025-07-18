@@ -22,6 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 import prm392.orderfood.androidapp.utils.SingleLiveEvent;
 import prm392.orderfood.domain.models.menuItem.MenuItem;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
+import prm392.orderfood.domain.models.shops.PopularShopResponse;
 import prm392.orderfood.domain.models.shops.Shop;
 import prm392.orderfood.domain.models.shops.ShopDetailResponse;
 import prm392.orderfood.domain.usecase.MenuItemUseCase;
@@ -36,6 +37,11 @@ public class ShopViewModel extends ViewModel {
 
     private final MutableLiveData<List<Shop>> _shops = new MutableLiveData<>();
     public LiveData<List<Shop>> shops = _shops;
+
+    private final MutableLiveData<List<PopularShopResponse>> _popularShops = new MutableLiveData<>();
+    public LiveData<List<PopularShopResponse>> getPopularShopResponse() {
+        return _popularShops;
+    }
 
     private final MutableLiveData<Shop> _shopDetail = new MutableLiveData<>();
     public LiveData<Shop> shopDetail = _shopDetail;
@@ -94,6 +100,19 @@ public class ShopViewModel extends ViewModel {
                                     _loading.setValue(false);
                                 },
                                 error -> handleError("Load shops by status", error)
+                        )
+        );
+    }
+
+    public void fetchPopularShops(String curTime) {
+        _loading.setValue(true);
+        disposables.add(
+                shopUseCase.getPopularShops(curTime)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                _popularShops::setValue,
+                                error -> handleError("Fetch popular shops", error)
                         )
         );
     }
