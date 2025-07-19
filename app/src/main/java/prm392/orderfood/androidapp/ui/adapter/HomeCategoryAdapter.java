@@ -88,4 +88,9 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         this.categoryList.addAll(newList);
         notifyDataSetChanged();
     }
+
+    public CategoryResponse getSelectedCategory() {
+        if (categoryList == null || selectedPosition < 0 || selectedPosition >= categoryList.size()) return null;
+        return categoryList.get(selectedPosition);
+    }
 }
