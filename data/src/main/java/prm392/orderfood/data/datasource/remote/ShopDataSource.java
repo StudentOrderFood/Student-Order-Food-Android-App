@@ -41,7 +41,10 @@ public class ShopDataSource {
             String address,
             String openHours,
             String endHours,
+            String latitude,
+            String longitude,
             File image,
+            File businessImage,
             List<File> subImages
     ) {
         List<MultipartBody.Part> additionalParts = new ArrayList<>();
@@ -51,12 +54,20 @@ public class ShopDataSource {
             }
         }
 
+        MultipartBody.Part businessImagePart = null;
+        if (businessImage != null) {
+            businessImagePart = toMultipartBody("businessLicenseImage", businessImage);
+        }
+
         return api.createShop(
                 toPart(name),
                 toPart(address),
                 toPart(openHours),
                 toPart(endHours),
+                toPart(latitude),
+                toPart(longitude),
                 toMultipartBody("image", image),
+                businessImagePart,
                 additionalParts
         );
     }
@@ -67,12 +78,20 @@ public class ShopDataSource {
             String address,
             String openHours,
             String endHours,
+            String latitude,
+            String longitude,
             File image, // may be null
+            File businessImage,
             List<File> subImages // may be null
     ) {
         MultipartBody.Part imagePart = null;
         if (image != null) {
             imagePart = toMultipartBody("image", image);
+        }
+
+        MultipartBody.Part businessImagePart = null;
+        if (businessImage != null) {
+            businessImagePart = toMultipartBody("businessLicenseImage", businessImage);
         }
 
         List<MultipartBody.Part> additionalParts = new ArrayList<>();
@@ -88,7 +107,10 @@ public class ShopDataSource {
                 toPart(address),
                 toPart(openHours),
                 toPart(endHours),
+                toPart(latitude),
+                toPart(longitude),
                 imagePart,
+                businessImagePart,
                 additionalParts
         );
     }

@@ -39,14 +39,19 @@ public class ShopFormFragment extends Fragment {
     private RecyclerView rvSubImages;
     private SubImageAdapter subImageAdapter;
     private EditText etName, etAddress, etOpenHours, etEndHours;
-    private Button btnSubmit, btnSelectImage, btnSelectSubImages;
-    private ImageView ivPreviewImage;
+    private Button btnSubmit, btnSelectImage, btnSelectSubImages, btnSelectBusinessImage, btnPickLocation;
+    private ImageView ivPreviewImage, ivBusinessImage;
     private ProgressBar progressBar;
+    TextView tvLocationInfo;
 
     private ShopViewModel shopViewModel;
 
     private File imageFile;
     private List<File> subImageFiles = new ArrayList<>();
+    private File businessLicenseImageFile;
+
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     private String editingShopId = null;
 
@@ -57,6 +62,16 @@ public class ShopFormFragment extends Fragment {
                     imageFile = FileUtils.getFileFromUri(requireContext(), uri);
                     ivPreviewImage.setImageURI(uri);
                     ivPreviewImage.setVisibility(View.VISIBLE);
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> businessImagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    businessLicenseImageFile = FileUtils.getFileFromUri(requireContext(), uri);
+                    ivBusinessImage.setImageURI(uri);
+                    ivBusinessImage.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -108,6 +123,9 @@ public class ShopFormFragment extends Fragment {
         ivPreviewImage = view.findViewById(R.id.ivPreviewImage);
         progressBar = view.findViewById(R.id.progressBar);
         rvSubImages = view.findViewById(R.id.rvSubImages);
+        btnSelectBusinessImage = view.findViewById(R.id.btnSelectBusinessImage);
+        ivBusinessImage = view.findViewById(R.id.ivBusinessImage);
+        btnPickLocation = view.findViewById(R.id.btnPickLocation);
     }
 
     private void setupRecyclerView() {
@@ -139,12 +157,24 @@ public class ShopFormFragment extends Fragment {
                 etAddress.setText(shop.getAddress());
                 etOpenHours.setText(shop.getOpenHours());
                 etEndHours.setText(shop.getEndHours());
+                latitude = shop.getLatitude();
+                longitude = shop.getLongitude();
+
+                tvLocationInfo = requireView().findViewById(R.id.tvLocationInfo);
+                tvLocationInfo.setText("Lat: " + latitude + ", Lng: " + longitude);
 
                 if (shop.getImageUrl() != null) {
                     Glide.with(this)
                             .load(shop.getImageUrl())
                             .into(ivPreviewImage);
                     ivPreviewImage.setVisibility(View.VISIBLE);
+                }
+
+                if (shop.getBusinessImageUrl() != null) {
+                    Glide.with(this)
+                            .load(shop.getBusinessImageUrl())
+                            .into(ivBusinessImage);
+                    ivBusinessImage.setVisibility(View.VISIBLE);
                 }
 
                 if (shop.getImages() != null && !shop.getImages().isEmpty()) {
@@ -186,6 +216,17 @@ public class ShopFormFragment extends Fragment {
             subImagePickerLauncher.launch(intent);
         });
 
+        btnSelectBusinessImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            businessImagePickerLauncher.launch(intent);
+        });
+
+        btnPickLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), MapPickerActivity.class);
+            startActivityForResult(intent, 101); // MAP_REQUEST_CODE = 101
+        });
+
         etOpenHours.setOnClickListener(v -> showTimePickerDialog(etOpenHours));
         etEndHours.setOnClickListener(v -> showTimePickerDialog(etEndHours));
 
@@ -197,12 +238,14 @@ public class ShopFormFragment extends Fragment {
             shop.setAddress(etAddress.getText().toString().trim());
             shop.setOpenHours(etOpenHours.getText().toString().trim());
             shop.setEndHours(etEndHours.getText().toString().trim());
+            shop.setLatitude(latitude);
+            shop.setLongitude(longitude);
 
             if (editingShopId != null && !editingShopId.isEmpty()) {
                 shop.setId(editingShopId);
-                shopViewModel.updateShop(shop, imageFile, subImageFiles);
+                shopViewModel.updateShop(shop, imageFile, businessLicenseImageFile, subImageFiles);
             } else {
-                shopViewModel.createShop(shop, imageFile, subImageFiles);
+                shopViewModel.createShop(shop, imageFile, businessLicenseImageFile, subImageFiles);
             }
         });
     }
@@ -245,6 +288,22 @@ public class ShopFormFragment extends Fragment {
             Toast.makeText(requireContext(), "Vui lòng chọn ảnh bìa cửa hàng", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (latitude == 0.0 && longitude == 0.0) {
+            Toast.makeText(requireContext(), "Vui lòng chọn vị trí trên bản đồ", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == Activity.RESULT_OK && data != null) {
+            latitude = data.getDoubleExtra("latitude", 0.0);
+            longitude = data.getDoubleExtra("longitude", 0.0);
+
+            tvLocationInfo.setText("Lat: " + latitude + ", Lng: " + longitude);
+            Toast.makeText(requireContext(), "Đã chọn vị trí: " + latitude + ", " + longitude, Toast.LENGTH_SHORT).show();
+        }
     }
 }

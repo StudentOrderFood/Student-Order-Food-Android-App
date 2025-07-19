@@ -33,13 +33,13 @@ public class ShopUseCase {
     }
 
     // ShopOwner
-    public Single<Shop> createShop(Shop shop, File image, List<File> subImages) {
-        return shopRepository.createShop(shop, image, subImages)
+    public Single<Shop> createShop(Shop shop, File image, File businessImage, List<File> subImages) {
+        return shopRepository.createShop(shop, image, businessImage, subImages)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Single<Shop> updateShop(Shop shop, File image, List<File> subImages) {
-        return shopRepository.updateShop(shop, image, subImages)
+    public Single<Shop> updateShop(Shop shop, File image, File businessImage, List<File> subImages) {
+        return shopRepository.updateShop(shop, image, businessImage, subImages)
                 .subscribeOn(Schedulers.io());
     }
 

@@ -33,13 +33,16 @@ public class ShopRepositoryImpl implements ShopRepository {
 
     // ShopOwner
     @Override
-    public Single<Shop> createShop(Shop shop, File image, List<File> subImages) {
+    public Single<Shop> createShop(Shop shop, File image, File businessImage, List<File> subImages) {
         return dataSource.createShop(
                         shop.getName(),
                         shop.getAddress(),
                         shop.getOpenHours(),
                         shop.getEndHours(),
+                        String.valueOf(shop.getLatitude()),
+                        String.valueOf(shop.getLongitude()),
                         image,
+                        businessImage,
                         subImages
                 )
                 .map(Response::body)
@@ -49,14 +52,17 @@ public class ShopRepositoryImpl implements ShopRepository {
     }
 
     @Override
-    public Single<Shop> updateShop(Shop shop, File image, List<File> subImages) {
+    public Single<Shop> updateShop(Shop shop, File image, File businessImage, List<File> subImages) {
         return dataSource.updateShop(
                         shop.getId(),
                         shop.getName(),
                         shop.getAddress(),
                         shop.getOpenHours(),
                         shop.getEndHours(),
+                        String.valueOf(shop.getLatitude()),
+                        String.valueOf(shop.getLongitude()),
                         image,
+                        businessImage,
                         subImages
                 )
                 .map(Response::body)

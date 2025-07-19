@@ -15,11 +15,18 @@ public class GetShopDetailResponse {
     private String endHours;
     private double rating;
     private String status;
+    private String businessImageUrl;
+    private String note;
+    private double latitude;
+    private double longitude;
     private List<GetShopImageResponse> images;
     private List<GetCategoriesInShopMenu> categories;
     private List<GetMenuItemResponse> menuItems;
 
-    public GetShopDetailResponse(String id, String name, String address, String imageUrl, String openHours, String endHours, double rating, String status, List<GetShopImageResponse> images, List<GetCategoriesInShopMenu> categories, List<GetMenuItemResponse> menuItems) {
+    public GetShopDetailResponse(String id, String name, String address, String imageUrl, String openHours,
+                                 String endHours, double rating, String status, List<GetShopImageResponse> images,
+                                 List<GetCategoriesInShopMenu> categories, List<GetMenuItemResponse> menuItems,
+                                 String businessImageUrl, String note, double latitude, double longitude) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -31,6 +38,10 @@ public class GetShopDetailResponse {
         this.images = images;
         this.categories = categories;
         this.menuItems = menuItems;
+        this.businessImageUrl = businessImageUrl;
+        this.note = note;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getId() {
@@ -119,5 +130,37 @@ public class GetShopDetailResponse {
 
     public void setMenuItems(List<GetMenuItemResponse> menuItems) {
         this.menuItems = menuItems;
+    }
+
+    public String getBusinessImageUrl() {
+        return businessImageUrl;
+    }
+
+    public void setBusinessImageUrl(String businessImageUrl) {
+        this.businessImageUrl = businessImageUrl;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

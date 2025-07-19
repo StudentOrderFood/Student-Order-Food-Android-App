@@ -13,6 +13,10 @@ public class Shop {
     private String endHours;
     private double rating;
     private String status;
+    private String businessImageUrl;
+    private String note;
+    private double latitude;
+    private double longitude;
     private String ownerId;
     private UserProfile owner;
     private List<String> images;
@@ -106,5 +110,37 @@ public class Shop {
 
     public void setOwner(UserProfile owner) {
         this.owner = owner;
+    }
+
+    public String getBusinessImageUrl() {
+        return businessImageUrl;
+    }
+
+    public void setBusinessImageUrl(String businessImageUrl) {
+        this.businessImageUrl = businessImageUrl;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

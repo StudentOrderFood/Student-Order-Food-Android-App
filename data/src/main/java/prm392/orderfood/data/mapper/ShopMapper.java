@@ -23,6 +23,9 @@ public class ShopMapper {
         shop.setEndHours(response.getEndHours());
         shop.setRating(response.getRating());
         shop.setStatus(response.getStatus());
+        shop.setLatitude(response.getLatitude());
+        shop.setLongitude(response.getLongitude());
+        shop.setBusinessImageUrl(response.getBusinessImageUrl());
         shop.setOwnerId(response.getOwnerId());
         if (response.getOwner() != null) {
             shop.setOwner(UserMapper.mapToUserProfileDomain(response.getOwner()));

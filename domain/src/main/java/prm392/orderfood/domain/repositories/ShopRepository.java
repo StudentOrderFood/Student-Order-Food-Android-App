@@ -17,8 +17,8 @@ public interface ShopRepository {
     Single<Boolean> approveOrRejectShop(String shopId, boolean isApproved);
 
     // ShopOwner
-    Single<Shop> createShop(Shop shop, File image, List<File> subImages);
-    Single<Shop> updateShop(Shop shop, @Nullable File image, @Nullable List<File> subImages);
+    Single<Shop> createShop(Shop shop, File image, File businessImage, List<File> subImages);
+    Single<Shop> updateShop(Shop shop, @Nullable File image, @Nullable File businessImage, @Nullable List<File> subImages);
     Single<List<Shop>> getShopsByOwner(int pageIndex, int pageSize);
     Single<Shop> getShopById(String shopId);
     Single<Boolean> deleteShop(String shopId); // ShopOwner

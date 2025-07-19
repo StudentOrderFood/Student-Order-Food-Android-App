@@ -30,7 +30,10 @@ public interface ShopApiService {
             @Part("address") RequestBody address,
             @Part("openHours") RequestBody openHours,
             @Part("endHours") RequestBody endHours,
+            @Part("latitude") RequestBody latitude,
+            @Part("longitude") RequestBody longitude,
             @Part MultipartBody.Part image,
+            @Part MultipartBody.Part businessLicenseImage,
             @Part List<MultipartBody.Part> additionalImages
     );
 
@@ -42,7 +45,10 @@ public interface ShopApiService {
             @Part("address") RequestBody address,
             @Part("openHours") RequestBody openHours,
             @Part("endHours") RequestBody endHours,
+            @Part("latitude") RequestBody latitude,
+            @Part("longitude") RequestBody longitude,
             @Part MultipartBody.Part image,
+            @Part MultipartBody.Part businessLicenseImage,
             @Part List<MultipartBody.Part> additionalImages
     );
 

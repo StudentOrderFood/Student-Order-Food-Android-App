@@ -149,10 +149,10 @@ public class ShopViewModel extends ViewModel {
         );
     }
 
-    public void createShop(Shop shop, File image, List<File> subImages) {
+    public void createShop(Shop shop, File image, File businessImage, List<File> subImages) {
         _loading.setValue(true);
         disposables.add(
-                shopUseCase.createShop(shop, image, subImages)
+                shopUseCase.createShop(shop, businessImage, image, subImages)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -166,10 +166,10 @@ public class ShopViewModel extends ViewModel {
         );
     }
 
-    public void updateShop(Shop shop, File image, List<File> subImages) {
+    public void updateShop(Shop shop, File image, File businessImage, List<File> subImages) {
         _loading.setValue(true);
         disposables.add(
-                shopUseCase.updateShop(shop, image, subImages)
+                shopUseCase.updateShop(shop, image, businessImage, subImages)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

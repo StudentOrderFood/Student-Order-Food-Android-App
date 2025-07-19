@@ -11,10 +11,12 @@ public class PopularShopResponse {
     private String openHours;
     private String endHours;
     private double rating;
+    private double latitude;
+    private double longitude;
     private List<String> categoryIds;
 
     public PopularShopResponse(String id, String name, String imageUrl, String address, String status,
-                               String openHours, String endHours, double rating, List<String> categoryIds) {
+                               String openHours, String endHours, double rating, List<String> categoryIds, double latitude, double longitude) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -24,6 +26,8 @@ public class PopularShopResponse {
         this.endHours = endHours;
         this.rating = rating;
         this.categoryIds = categoryIds;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public PopularShopResponse() {
@@ -99,5 +103,21 @@ public class PopularShopResponse {
 
     public void setCategoryIds(List<String> categoryIds) {
         this.categoryIds = categoryIds;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
