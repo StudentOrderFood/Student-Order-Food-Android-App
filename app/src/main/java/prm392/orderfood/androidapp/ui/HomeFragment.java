@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -24,7 +26,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +68,8 @@ public class HomeFragment extends Fragment {
     private double currentLat = 0.0;
     private double currentLng = 0.0;
 
+    private ActivityResultLauncher<String> locationPermissionLauncher;
+    private LocationCallback locationCallback;
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -71,6 +79,19 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        locationPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        // Quyền được cấp -> gọi hàm lấy vị trí
+                        getCurrentLocation();
+                    } else {
+                        // Quyền bị từ chối
+                        Toast.makeText(requireContext(), "Ứng dụng cần quyền vị trí để tìm cửa hàng gần bạn", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     @Override
@@ -145,6 +166,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
     private void setupEvents() {
         binding.civProfileImg.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).navigate(R.id.action_global_profileFragment);
@@ -191,20 +213,39 @@ public class HomeFragment extends Fragment {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // TODO: yêu cầu permission nếu chưa có
+            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
             return;
         }
 
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(location -> {
-                    if (location != null) {
-                        currentLat = location.getLatitude();
-                        currentLng = location.getLongitude();
-                        Log.d(TAG, "Current location: " + currentLat + ", " + currentLng);
+        LocationRequest locationRequest = new LocationRequest.Builder(
+                Priority.PRIORITY_HIGH_ACCURACY, // priority
+                5000 // interval in milliseconds
+        ).setWaitForAccurateLocation(true)
+                .setMinUpdateIntervalMillis(2000)
+                .setMaxUpdates(1)
+                .build();
 
-                        // Sau khi có location, mới gọi API
-                        mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
-                    }
-                });
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if (locationResult == null || locationResult.getLastLocation() == null) {
+                    Toast.makeText(requireContext(), "Không lấy được vị trí hiện tại. Hãy thử lại sau.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                currentLat = locationResult.getLastLocation().getLatitude();
+                currentLng = locationResult.getLastLocation().getLongitude();
+                Log.d(TAG, "Current location (real-time): " + currentLat + ", " + currentLng);
+
+                // Gọi API sau khi lấy được vị trí
+                mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
+
+                // Hủy request sau khi lấy xong
+                fusedLocationClient.removeLocationUpdates(this);
+            }
+        };
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
     private void applyCategoryFilter(String selectedCategoryId) {
