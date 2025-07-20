@@ -2,6 +2,7 @@ package prm392.orderfood.data.network;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -24,6 +25,11 @@ public class DateTypeAdapterFlexible extends TypeAdapter<Date> {
 
     @Override
     public Date read(JsonReader in) throws IOException {
+        if (in.peek() == JsonToken.NULL) {
+            in.nextNull(); // bỏ qua giá trị null
+            return null;
+        }
+
         String dateStr = in.nextString();
         try {
             return sdf.parse(dateStr);
