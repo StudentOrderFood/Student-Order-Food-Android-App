@@ -128,4 +128,9 @@
         android:id="@+id/orderListFragment"
         android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.OrderListFragment"
         android:label="OrderListFragment" />
+    <fragment
+        android:id="@+id/walletFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.customer.WalletFragment"
+        android:label="WalletFragment"
+        tools:layout="@layout/fragment_wallet" />
 </navigation>

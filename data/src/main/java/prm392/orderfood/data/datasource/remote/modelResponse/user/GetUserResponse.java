@@ -9,6 +9,7 @@ public class GetUserResponse {
     private String address;
     private String dob;
     private String avatar;
+    private double walletBalance;
     private String roleId;
     private String roleName;
 
@@ -94,5 +95,13 @@ public class GetUserResponse {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public double getWalletBalance() {
+        return walletBalance;
+    }
+
+    public void setWalletBalance(double walletBalance) {
+        this.walletBalance = walletBalance;
     }
 }
