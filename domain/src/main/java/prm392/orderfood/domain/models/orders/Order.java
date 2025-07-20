@@ -10,8 +10,17 @@ public class Order {
     private List<OrderItem> orderItems;
     private String paymentMethod; // COD and Bank
     private double totalAmount;
+    private String orderStatus; // e.g., "Pending", "Completed", "Cancelled", "Confirmed", "Delivered"
 
     public Order() {
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public String getCustomerId() {

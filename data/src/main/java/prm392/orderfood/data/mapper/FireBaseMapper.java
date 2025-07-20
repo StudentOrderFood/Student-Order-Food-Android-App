@@ -16,6 +16,7 @@ public class FireBaseMapper {
         orderFB.setShopId(order.getShopId());
         orderFB.setPaymentMethod(order.getPaymentMethod());
         orderFB.setTotalAmount(order.getTotalAmount());
+        orderFB.setOrderStatus(order.getOrderStatus());
 
         // Map order items
         var orderItems = new ArrayList<OrderItemFireBase>();
@@ -42,6 +43,7 @@ public class FireBaseMapper {
         orderRealTime.setShopId(orderFireBase.getShopId());
         orderRealTime.setPaymentMethod(orderFireBase.getPaymentMethod());
         orderRealTime.setTotalAmount(orderFireBase.getTotalAmount());
+        orderRealTime.setOrderStatus(orderFireBase.getOrderStatus());
 
         // Map order items
         var orderItems = new ArrayList<OrderItemRealTime>();

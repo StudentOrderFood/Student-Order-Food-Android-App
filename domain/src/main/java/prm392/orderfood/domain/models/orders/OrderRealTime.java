@@ -15,6 +15,15 @@ public class OrderRealTime {
     private List<OrderItemRealTime> orderItems;
     private String paymentMethod; // COD and Bank
     private double totalAmount;
+    private String orderStatus;
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
     public String getFirebaseId() {
         return firebaseId;
@@ -74,11 +83,12 @@ public class OrderRealTime {
                 Objects.equals(customerId, that.customerId) &&
                 Objects.equals(shopId, that.shopId) &&
                 Objects.equals(orderItems, that.orderItems) &&
-                Objects.equals(paymentMethod, that.paymentMethod);
+                Objects.equals(paymentMethod, that.paymentMethod) &&
+                Objects.equals(orderStatus, that.orderStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firebaseId, customerId, shopId, orderItems, paymentMethod, totalAmount);
+        return Objects.hash(firebaseId, customerId, shopId, orderItems, paymentMethod, totalAmount, orderStatus);
     }
 }

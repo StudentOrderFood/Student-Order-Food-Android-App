@@ -31,5 +31,10 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderDataSource.getOrdersByShopId(shopId);
     }
 
+    @Override
+    public Completable updateOrderStatus(String orderId, String status) {
+        return orderDataSource.updateOrderStatus(orderId, status);
+    }
+
 
 }

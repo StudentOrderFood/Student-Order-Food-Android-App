@@ -58,7 +58,27 @@ public class OrderListFragment extends Fragment {
 
     // Setup adapter
     private void setupAdapter() {
-        adapter = new OrderAdapter(orderList, Objects.requireNonNull(mShopViewModel.getShopDetailResponse().getValue()).getMenuItems());
+        adapter = new OrderAdapter(orderList, Objects.requireNonNull(mShopViewModel.getShopDetailResponse().getValue()).getMenuItems(), new OrderAdapter.OnOrderActionListener() {
+            @Override
+            public void onConfirmClicked(OrderRealTime order) {
+                mOrderViewModel.updateOrderStatus(order.getFirebaseId(), "Confirmed");
+            }
+
+            @Override
+            public void onCancelClicked(OrderRealTime order) {
+                mOrderViewModel.updateOrderStatus(order.getFirebaseId(), "Cancelled");
+            }
+
+            @Override
+            public void onDeliveredClicked(OrderRealTime order) {
+                mOrderViewModel.updateOrderStatus(order.getFirebaseId(), "Delivered");
+            }
+
+            @Override
+            public void onDoneClicked(OrderRealTime order) {
+                mOrderViewModel.updateOrderStatus(order.getFirebaseId(), "Completed");
+            }
+        });
         binding.rvOrders.setAdapter(adapter);
     }
 

@@ -12,6 +12,15 @@ public class OrderFireBase {
     private List<OrderItemFireBase> orderItems;
     private String paymentMethod; // COD and Bank
     private double totalAmount;
+    private String orderStatus;
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
     public String getCustomerId() {
         return customerId;

@@ -76,6 +76,7 @@ public class OrderViewModel extends ViewModel {
     }
 
     public void submitCodOrder(Order newOrder) {
+        newOrder.setOrderStatus("Pending");
         mCompositeDisposable.add(
                 orderUseCase.submitCodOrder(newOrder)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -101,6 +102,19 @@ public class OrderViewModel extends ViewModel {
                                 },
                                 throwable -> {
                                     errorMessage.setValue("Failed to fetch orders: " + throwable.getMessage());
+                                }
+                        )
+        );
+    }
+
+    public void updateOrderStatus(String orderId, String newStatus) {
+        mCompositeDisposable.add(
+                orderUseCase.updateOrderStatus(orderId, newStatus)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {
+                                },
+                                throwable -> {
                                 }
                         )
         );

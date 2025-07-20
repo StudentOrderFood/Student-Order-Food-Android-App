@@ -31,4 +31,10 @@ public class OrderUseCase {
         return orderRepository.getOrdersByShopId(shopId)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Completable updateOrderStatus(String orderId, String status) {
+        // Logic to update the status of an order
+        return orderRepository.updateOrderStatus(orderId, status)
+                .subscribeOn(Schedulers.io());
+    }
 }

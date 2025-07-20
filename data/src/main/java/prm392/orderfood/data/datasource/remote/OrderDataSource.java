@@ -76,4 +76,17 @@ public class OrderDataSource {
         }, BackpressureStrategy.LATEST); // LATEST: giữ giá trị mới nhất nếu không xử lý kịp
     }
 
+    public Completable updateOrderStatus(String firebaseId, String newStatus) {
+        return Completable.create(emitter -> {
+            if (firebaseId == null || firebaseId.isEmpty()) {
+                emitter.onError(new IllegalArgumentException("Invalid Firebase ID"));
+                return;
+            }
+
+            databaseReference.child(firebaseId).child("orderStatus").setValue(newStatus)
+                    .addOnSuccessListener(unused -> emitter.onComplete())
+                    .addOnFailureListener(emitter::onError);
+        });
+    }
+
 }
