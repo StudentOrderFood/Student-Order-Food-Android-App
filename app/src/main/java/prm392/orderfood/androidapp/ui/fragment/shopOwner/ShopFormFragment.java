@@ -126,6 +126,7 @@ public class ShopFormFragment extends Fragment {
         btnSelectBusinessImage = view.findViewById(R.id.btnSelectBusinessImage);
         ivBusinessImage = view.findViewById(R.id.ivBusinessImage);
         btnPickLocation = view.findViewById(R.id.btnPickLocation);
+        tvLocationInfo = view.findViewById(R.id.tvLocationInfo);
     }
 
     private void setupRecyclerView() {
@@ -161,7 +162,9 @@ public class ShopFormFragment extends Fragment {
                 longitude = shop.getLongitude();
 
                 tvLocationInfo = requireView().findViewById(R.id.tvLocationInfo);
-                tvLocationInfo.setText("Lat: " + latitude + ", Lng: " + longitude);
+                if (tvLocationInfo != null) {
+                    tvLocationInfo.setText("Lat: " + latitude + ", Lng: " + longitude);
+                }
 
                 if (shop.getImageUrl() != null) {
                     Glide.with(this)

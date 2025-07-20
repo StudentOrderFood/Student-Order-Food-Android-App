@@ -1,9 +1,12 @@
 package prm392.orderfood.androidapp.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -20,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +58,10 @@ public class HomeFragment extends Fragment {
     private List<PopularShopResponse> fullShopList;
     private List<CategoryResponse> fullCategoryList;
 
+    private FusedLocationProviderClient fusedLocationClient;
+    private double currentLat = 0.0;
+    private double currentLng = 0.0;
+
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -69,6 +78,10 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        getCurrentLocation();
+
         return binding.getRoot();
     }
 
@@ -93,7 +106,7 @@ public class HomeFragment extends Fragment {
         }
 
         mCategoryViewModel.getAllCategories();
-        mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
+//        mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
 //        Log.d(TAG, "onViewCreated: Current Time: " + DateTimeUtils.getCurrentTime());
     }
 
@@ -120,10 +133,15 @@ public class HomeFragment extends Fragment {
         });
 
         mShopViewModel.getPopularShopResponse().observe(getViewLifecycleOwner(), popularShopResponse -> {
-//            Toast.makeText(requireContext(), "Popular shops loaded", Toast.LENGTH_SHORT).show();
             if (popularShopResponse != null) {
                 fullShopList = popularShopResponse;
-                popularShopAdapter.updateData(fullShopList);
+
+                CategoryResponse selected = homeCategoryAdapter.getSelectedCategory();
+                if (selected != null) {
+                    applyCategoryFilter(selected.getId());
+                } else {
+                    popularShopAdapter.updateData(fullShopList);
+                }
             }
         });
     }
@@ -134,36 +152,20 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        // Thiết lập RecyclerView cho danh sách category
         homeCategoryAdapter = new HomeCategoryAdapter(
                 fullCategoryList,
                 position -> {
                     CategoryResponse selected = mCategoryViewModel.getCategoriesLiveData().getValue().get(position);
                     if (selected == null || selected.getId() == null) return;
-                    String selectedCategoryId = selected.getId();
-                    if ("ALL".equalsIgnoreCase(selectedCategoryId)) {
-                        // Nếu là "ALL", hiển thị toàn bộ
-                        popularShopAdapter.updateData(fullShopList);
-                    } else {
-                        // Lọc theo categoryId
-                        List<PopularShopResponse> filteredShops = new ArrayList<>();
-                        for (PopularShopResponse shop : fullShopList) {
-                            if (shop.getCategoryIds() != null && shop.getCategoryIds().contains(selectedCategoryId)) {
-                                filteredShops.add(shop);
-                            }
-                        }
-                        popularShopAdapter.updateData(filteredShops);
-                    }
+
+                    applyCategoryFilter(selected.getId());
                 }
         );
-        binding.rvCategories.setLayoutManager(
-                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        );
+        binding.rvCategories.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvCategories.setHasFixedSize(true);
         binding.rvCategories.setItemAnimator(new DefaultItemAnimator());
         binding.rvCategories.setAdapter(homeCategoryAdapter);
 
-        // Thiết lập RecyclerView cho danh sách shop phổ biến
         popularShopAdapter = new PopularShopAdapter(
                 fullShopList,
                 shop -> {
@@ -179,11 +181,67 @@ public class HomeFragment extends Fragment {
                     navController.navigate(R.id.action_homeFragment_to_shopDetailFragment);
                 }
         );
-        binding.rvPopularShops.setLayoutManager(
-                new androidx.recyclerview.widget.GridLayoutManager(requireContext(), 2)
-        );
+        binding.rvPopularShops.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(requireContext(), 2));
         binding.rvPopularShops.setHasFixedSize(true);
         binding.rvPopularShops.setItemAnimator(new DefaultItemAnimator());
         binding.rvPopularShops.setAdapter(popularShopAdapter);
+    }
+
+    private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // TODO: yêu cầu permission nếu chưa có
+            return;
+        }
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        currentLat = location.getLatitude();
+                        currentLng = location.getLongitude();
+                        Log.d(TAG, "Current location: " + currentLat + ", " + currentLng);
+
+                        // Sau khi có location, mới gọi API
+                        mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
+                    }
+                });
+    }
+
+    private void applyCategoryFilter(String selectedCategoryId) {
+        List<PopularShopResponse> filteredShops = new ArrayList<>();
+        for (PopularShopResponse shop : fullShopList) {
+            double shopLat = shop.getLatitude();
+            double shopLng = shop.getLongitude();
+
+            boolean matchCategory = "ALL".equalsIgnoreCase(selectedCategoryId) ||
+                    (shop.getCategoryIds() != null && shop.getCategoryIds().contains(selectedCategoryId));
+
+            double distance = calculateDistance(currentLat, currentLng, shopLat, shopLng);
+            boolean inRange = distance <= 5.0;
+
+            Log.d("ShopFilter", "Shop: " + shop.getName() +
+                    " | Lat: " + shopLat +
+                    ", Lng: " + shopLng +
+                    " | Distance: " + distance +
+                    "km | InRange: " + inRange +
+                    " | MatchCategory: " + matchCategory);
+
+            if (matchCategory && inRange) {
+                filteredShops.add(shop);
+            }
+        }
+
+        popularShopAdapter.updateData(filteredShops);
+    }
+
+    private double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+        final int R = 6371; // Bán kính Trái đất (km)
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Khoảng cách (km)
     }
 }
