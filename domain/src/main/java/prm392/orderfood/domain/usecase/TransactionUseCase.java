@@ -22,12 +22,12 @@ public class TransactionUseCase {
     }
 
     // Admin
-    public Single<Response<List<Transaction>>> getAllTransactionsByUserId(String userId) {
+    public Single<List<Transaction>> getAllTransactionsByUserId(String userId) {
         return transactionRepository.getAllTransactionsByUserId(userId)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Single<Response<Transaction>> requestWithdraw(String userId, double amount, String description) {
+    public Single<Transaction> requestWithdraw(String userId, double amount, String description) {
         return transactionRepository.requestWithdraw(userId, amount, description)
                 .subscribeOn(Schedulers.io());
     }

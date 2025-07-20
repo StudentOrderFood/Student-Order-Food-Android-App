@@ -7,6 +7,6 @@ import prm392.orderfood.domain.models.transactions.Transaction;
 import retrofit2.Response;
 
 public interface TransactionRepository {
-    Single<Response<List<Transaction>>> getAllTransactionsByUserId(String userId);
-    Single<Response<Transaction>> requestWithdraw(String userId, double amount, String description);
+    Single<List<Transaction>> getAllTransactionsByUserId(String userId);
+    Single<Transaction> requestWithdraw(String userId, double amount, String description);
 }

@@ -1,9 +1,12 @@
 package prm392.orderfood.androidapp.viewModel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +14,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.domain.models.transactions.Transaction;
 import prm392.orderfood.domain.usecase.TransactionUseCase;
 import prm392.orderfood.androidapp.utils.SingleLiveEvent;
@@ -54,23 +58,19 @@ public class TransactionViewModel extends ViewModel {
                 transactionUseCase.getAllTransactionsByUserId(userId)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                response -> {
+                                transactionList -> {
                                     isLoading.setValue(false);
-                                    if (response.isSuccessful() && response.body() != null) {
-                                        List<Transaction> data = response.body();
-                                        if (data != null && !data.isEmpty()) {
-                                            transactions.setValue(data);
-                                        } else {
-                                            transactions.setValue(null); // báo về UI là không có dữ liệu
-                                            toastMessage.setValue("No transactions found");
-                                        }
+                                    if (transactionList != null && !transactionList.isEmpty()) {
+                                        transactions.setValue(transactionList);
                                     } else {
-                                        errorMessage.setValue("Failed to load transactions: " + response.message());
+                                        transactions.setValue(Collections.emptyList());
+                                        toastMessage.setValue("No transactions found");
                                     }
                                 },
                                 throwable -> {
                                     isLoading.setValue(false);
                                     errorMessage.setValue("Failed to load transactions: " + throwable.getMessage());
+                                    Log.e("TransactionViewModel", "Error loading transactions", throwable);
                                 }
                         )
         );
@@ -82,12 +82,12 @@ public class TransactionViewModel extends ViewModel {
                 transactionUseCase.requestWithdraw(userId, amount, description)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                response -> {
+                                transaction -> {
                                     isLoading.setValue(false);
-                                    if (response.isSuccessful()) {
+                                    if (transaction != null) {
                                         toastMessage.setValue("Withdraw request submitted successfully");
                                     } else {
-                                        errorMessage.setValue("Withdraw request failed: " + response.message());
+                                        errorMessage.setValue("Withdraw request failed: Empty response");
                                     }
                                 },
                                 throwable -> {
