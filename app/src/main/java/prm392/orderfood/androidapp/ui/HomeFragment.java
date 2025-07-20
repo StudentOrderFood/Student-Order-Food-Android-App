@@ -36,6 +36,7 @@ import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.androidapp.viewModel.UserViewModel;
 import prm392.orderfood.domain.models.category.CategoryResponse;
 import prm392.orderfood.domain.models.shops.PopularShopResponse;
+import prm392.orderfood.domain.models.shops.Shop;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
@@ -166,7 +167,15 @@ public class HomeFragment extends Fragment {
         popularShopAdapter = new PopularShopAdapter(
                 fullShopList,
                 shop -> {
-                    mShopViewModel.setSelectedShop(shop.getId());
+                    Shop selectedShop = new Shop();
+                    selectedShop.setId(shop.getId());
+                    selectedShop.setName(shop.getName());
+                    selectedShop.setAddress(shop.getAddress());
+                    selectedShop.setImageUrl(shop.getImageUrl());
+                    selectedShop.setOpenHours(shop.getOpenHours());
+                    selectedShop.setEndHours(shop.getEndHours());
+                    selectedShop.setRating(shop.getRating());
+                    mShopViewModel.setSelectedShop(selectedShop);
                     navController.navigate(R.id.action_homeFragment_to_shopDetailFragment);
                 }
         );

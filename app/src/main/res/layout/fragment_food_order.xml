@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background">
+    android:background="@color/cardview_light_background"
+    tools:context=".ui.fragment.customer.CartFragment">
 
     <!-- Header with restaurant info -->
     <LinearLayout
@@ -19,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/tvShopName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Restaurant Name"
@@ -26,13 +28,15 @@
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/tvShopAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Category • $$$ • 4.5 ★"
+            android:text="Address"
             android:textColor="@color/black"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="8dp"/>
 
         <TextView
+            android:id="@+id/tvShopEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Open until 10:00 PM"
@@ -65,6 +69,7 @@
 
         <!-- Cart row -->
         <LinearLayout
+            android:id="@+id/cartRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -76,6 +81,7 @@
                 app:tint="@color/primary_color" />
 
             <TextView
+                android:id="@+id/tvTotalItems"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3 items"
@@ -127,10 +133,17 @@
             android:layout_height="48dp"
             android:layout_marginTop="12dp"
             android:backgroundTint="@color/primary_color"
-            android:text="Order Now / Pay"
+            android:text="Order Now"
             android:textColor="@color/white"
             android:textAllCaps="false"/>
     </LinearLayout>
+
+<!--    <TextView-->
+<!--        android:id="@+id/emptyCartTextView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:text="Empty Cart"-->
+<!--        />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

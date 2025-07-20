@@ -55,12 +55,12 @@ public class ShopViewModel extends ViewModel {
     private final MutableLiveData<String> _errorMessage = new MutableLiveData<>();
     public LiveData<String> errorMessage = _errorMessage;
 
-    private final MutableLiveData<String> selectedShop = new MutableLiveData<>();
-    public LiveData<String> getSelectedShop() {
+    private final MutableLiveData<Shop> selectedShop = new MutableLiveData<>();
+    public LiveData<Shop> getSelectedShop() {
         return selectedShop;
     }
-    public void setSelectedShop(String shopId) {
-        selectedShop.setValue(shopId);
+    public void setSelectedShop(Shop shop) {
+        selectedShop.setValue(shop);
     }
 
     private final MutableLiveData<ShopDetailResponse> _shopDetailResponse = new MutableLiveData<>();

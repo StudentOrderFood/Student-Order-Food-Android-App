@@ -129,8 +129,9 @@ public class ShopDetailFragment extends Fragment {
             }
         });
 
+        // Set up click nav to cart
         binding.layoutSelectedProductInfo.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Selected product: " + binding.tvSelectedProductName.getText(), Toast.LENGTH_SHORT).show();
+            navController.navigate(R.id.action_shopDetailFragment_to_cartFragment);
         });
 
         binding.tvCloseSelectedProductLayout.setOnClickListener(v -> {
@@ -150,6 +151,17 @@ public class ShopDetailFragment extends Fragment {
                 Toast.makeText(getContext(), "No product selected", Toast.LENGTH_SHORT).show();
             }
         });
+
+        binding.cvOrders.setOnClickListener(v -> {
+            // Navigate to Order List Fragment
+            if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
+                // Nếu là ShopOwner, chuyển đến danh sách Orders
+                navController.navigate(R.id.action_shopDetailFragment_to_orderListFragment);
+            } else if ("Student".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
+                // Nếu là Customer, chuyển đến danh sách Cart
+                navController.navigate(R.id.action_shopDetailFragment_to_cartFragment);
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -161,7 +173,7 @@ public class ShopDetailFragment extends Fragment {
                 return;
             }
 
-            mShopViewModel.getShopDetail(shop);
+            mShopViewModel.getShopDetail(shop.getId());
         });
 
         mShopViewModel.getShopDetailResponse().observe(getViewLifecycleOwner(), shopDetailResponse -> {

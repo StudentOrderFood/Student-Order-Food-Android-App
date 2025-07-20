@@ -33,11 +33,15 @@ android {
 
 dependencies {
     implementation project(':domain')
+    implementation platform(libs.firebase.bom)
 
     // Hilt để inject Repository
     implementation libs.hilt.android
     implementation libs.play.services.tasks
     implementation libs.google.firebase.auth
+    // Add the dependency for the Realtime Database library
+    implementation(libs.firebase.database)
+
     implementation libs.rxandroid
     kapt libs.hilt.compiler
 

@@ -38,4 +38,19 @@ public class CurrencyUtils {
             return "0";
         }
     }
+
+    /**
+     * Chuyển từ định dạng tiền Việt (VD: "20.000 VND") sang số double (VD: 20000.0)
+     */
+    public static double parseVNDToDouble(String priceStr) {
+        try {
+            // Loại bỏ chữ "VND" và khoảng trắng
+            String numericPart = priceStr.replace("VND", "").trim();
+            // Loại bỏ dấu chấm ngăn cách hàng nghìn
+            numericPart = numericPart.replace(".", "");
+            return Double.parseDouble(numericPart);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
 }

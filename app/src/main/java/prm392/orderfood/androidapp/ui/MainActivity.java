@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.ActivityMainBinding;
 import prm392.orderfood.androidapp.viewModel.AuthViewModel;
+import prm392.orderfood.androidapp.viewModel.UserViewModel;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
@@ -28,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private BottomNavigationView bottomNavigationView;
     private AuthViewModel mAuthViewModel;
+    private UserViewModel mUserViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         mAuthViewModel =  new ViewModelProvider(this).get(AuthViewModel.class); // Assuming you have a way to get the ViewModel instance
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class); // Assuming you have a way to get the ViewModel instance
         setContentView(binding.getRoot());
 
         NavHostFragment navHost = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
@@ -56,11 +59,22 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setVisibility(View.GONE);
             } else if (destination.getId() == R.id.shopDetailFragment && "Student".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
                 bottomNavigationView.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.cartFragment) {
+                bottomNavigationView.setVisibility(View.GONE);
             }
             else {
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
         });
+
+        mUserViewModel.getUserProfileLiveData()
+                .observe(this, userProfile -> {
+                    if (userProfile != null) {
+                        Log.d(TAG, "User profile loaded: " + userProfile.getUserId());
+                    } else {
+                        Log.e(TAG, "User profile is null");
+                    }
+                });
     }
 
     // Func handle bottom navigation item selection

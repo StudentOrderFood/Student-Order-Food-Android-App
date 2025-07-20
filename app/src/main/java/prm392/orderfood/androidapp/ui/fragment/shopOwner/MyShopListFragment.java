@@ -146,7 +146,7 @@ public class MyShopListFragment extends Fragment {
     }
 
     private void navToShopDetail(Shop shop) {
-        shopViewModel.setSelectedShop(shop.getId());
+        shopViewModel.setSelectedShop(shop);
         Log.d(TAG, "navToShopDetail: " + shop.getId());
         NavHostFragment.findNavController(this).navigate(R.id.action_myShopListFragment_to_shopDetailFragment);
     }

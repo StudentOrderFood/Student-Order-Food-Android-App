@@ -227,7 +227,7 @@ public class AddProductFragment extends Fragment {
             }
 
             // Kiểm tra shop
-            String shopId = mShopViewModel.getSelectedShop().getValue() != null ? mShopViewModel.getSelectedShop().getValue() : null;
+            String shopId = mShopViewModel.getSelectedShop().getValue() != null ? mShopViewModel.getSelectedShop().getValue().getId() : null;
             if (shopId == null || shopId.isEmpty()) {
                 Toast.makeText(requireContext(), "No shop selected", Toast.LENGTH_SHORT).show();
                 return;

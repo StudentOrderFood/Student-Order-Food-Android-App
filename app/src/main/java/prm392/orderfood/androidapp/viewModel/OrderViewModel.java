@@ -10,19 +10,24 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import prm392.orderfood.androidapp.utils.SingleLiveEvent;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 import prm392.orderfood.domain.models.orderItem.OrderItem;
-import prm392.orderfood.domain.usecase.UserUseCase;
+import prm392.orderfood.domain.models.orders.Order;
+import prm392.orderfood.domain.models.orders.OrderRealTime;
+import prm392.orderfood.domain.usecase.OrderUseCase;
 
 @HiltViewModel
 public class OrderViewModel extends ViewModel {
     private final CompositeDisposable mCompositeDisposable;
+    private final OrderUseCase orderUseCase;
 
     @Inject
-    public OrderViewModel() {
+    public OrderViewModel(OrderUseCase orderUseCase) {
         this.mCompositeDisposable = new CompositeDisposable();
+        this.orderUseCase = orderUseCase;
     }
 
     private final SingleLiveEvent<String> toastMessage = new SingleLiveEvent<>();
@@ -33,7 +38,7 @@ public class OrderViewModel extends ViewModel {
 
     private final SingleLiveEvent<String> errorMessage = new SingleLiveEvent<>();
 
-    private LiveData<String> getErrorMessageLiveData() {
+    public LiveData<String> getErrorMessageLiveData() {
         return errorMessage;
     }
 
@@ -41,6 +46,16 @@ public class OrderViewModel extends ViewModel {
 
     public LiveData<List<OrderItem>> getOrderItemsLiveData() {
         return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> newList) {
+        orderItems.setValue(newList);
+    }
+
+    private MutableLiveData<List<OrderRealTime>> ordersByShopId = new MutableLiveData<>(new ArrayList<>());
+
+    public LiveData<List<OrderRealTime>> getOrderByShopIdLiveData() {
+        return ordersByShopId;
     }
 
     public void addItemToOrder(MenuItemResponse menuItem, int quantity) {
@@ -60,6 +75,36 @@ public class OrderViewModel extends ViewModel {
         orderItems.setValue(currentItems); // notify observers
     }
 
+    public void submitCodOrder(Order newOrder) {
+        mCompositeDisposable.add(
+                orderUseCase.submitCodOrder(newOrder)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {
+                                    toastMessage.setValue("Order submitted successfully");
+                                    orderItems.setValue(new ArrayList<>()); // Clear the cart after successful order
+                                },
+                                throwable -> {
+                                    errorMessage.setValue("Failed to submit order: " + throwable.getMessage());
+                                }
+                        )
+        );
+    }
+
+    public void getOrdersByShopId(String shopId) {
+        mCompositeDisposable.add(
+                orderUseCase.getOrdersByShopId(shopId)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                orders -> {
+                                    ordersByShopId.setValue(orders);
+                                },
+                                throwable -> {
+                                    errorMessage.setValue("Failed to fetch orders: " + throwable.getMessage());
+                                }
+                        )
+        );
+    }
 
     private boolean updateExistingItemQuantity(List<OrderItem> currentItems, MenuItemResponse menuItem, int quantity) {
         for (OrderItem item : currentItems) {
@@ -74,5 +119,11 @@ public class OrderViewModel extends ViewModel {
     private void addNewItemToCart(List<OrderItem> currentItems, MenuItemResponse menuItem, int quantity) {
         OrderItem newItem = new OrderItem(menuItem, quantity, menuItem.getPrice());
         currentItems.add(newItem);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mCompositeDisposable.clear();
     }
 }
