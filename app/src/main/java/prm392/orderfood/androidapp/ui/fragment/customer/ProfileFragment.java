@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder;
 
 import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.FragmentProfileMenuBinding;
+import prm392.orderfood.androidapp.utils.CurrencyUtils;
 import prm392.orderfood.androidapp.utils.PhoneNumberUtils;
 import prm392.orderfood.androidapp.viewModel.AuthViewModel;
 import prm392.orderfood.androidapp.viewModel.UserViewModel;
@@ -90,6 +91,14 @@ public class ProfileFragment extends Fragment {
                     });
                 } else {
                     binding.llManageShops.setVisibility(View.GONE);
+                }
+
+                if ("ShopOwner".equalsIgnoreCase(userProfile.getRoleName())) {
+                    binding.llWallet.setVisibility(View.VISIBLE);
+                    String formatted = CurrencyUtils.formatToVND(userProfile.getWalletBalance());
+                    binding.tvWalletBalance.setText(formatted);
+                } else {
+                    binding.llWallet.setVisibility(View.GONE);
                 }
 
                 // Hiển thị Card Missing information
@@ -212,33 +221,20 @@ public class ProfileFragment extends Fragment {
             navController.navigate(R.id.action_profileFragment_to_phoneInputFragment);
         });
 
+        binding.llWallet.setOnClickListener(v -> {
+            if (userProfile == null) {
+                Toast.makeText(requireContext(), "Please wait for user data to load", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-//        binding.btnSavePhone.setOnClickListener(v -> {
-//            String phone = binding.etPhoneInput.getText().toString().trim();
-//            if (phone.isEmpty()) {
-//                Toast.makeText(requireContext(), "Phone cannot be empty", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            if (!PhoneNumberUtils.isValidPhoneNumber(phone)) {
-//                Toast.makeText(requireContext(), "Invalid phone number format", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            if (userProfile != null) {
-//                userProfile.setPhone(phone);
-////                mUserViewModel.setUserProfileLiveData(userProfile);
-////                mUserViewModel.updatePhoneNumber(userProfile);
-//            }
-//
-//            // Ẩn form sau khi cập nhật
-//            if (binding.layoutPhoneForm.getVisibility() == View.VISIBLE) {
-//                toggleVisibility(binding.layoutPhoneForm, binding.ivArrowPhone);
-//            }
-//            Toast.makeText(requireContext(), "Saved: " + phone, Toast.LENGTH_SHORT).show();
-//
-//        });
+            if (!"ShopOwner".equalsIgnoreCase(userProfile.getRoleName())) {
+                Toast.makeText(requireContext(), "You do not have access to Wallet", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            // Navigate to wallet screen (you'll create this fragment)
+            navController.navigate(R.id.walletFragment);
+        });
     }
 
     private void toggleVisibility(View targetLayout, ImageView arrowIcon) {

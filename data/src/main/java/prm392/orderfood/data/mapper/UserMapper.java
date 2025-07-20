@@ -20,6 +20,7 @@ public class UserMapper {
         userProfile.setAddress(response.getAddress());
         userProfile.setAvatar(response.getAvatar());
         userProfile.setDob(response.getDob());
+        userProfile.setWalletBalance(response.getWalletBalance());
         userProfile.setRoleId(response.getRoleId());
         userProfile.setRoleName(response.getRoleName());
         return userProfile;

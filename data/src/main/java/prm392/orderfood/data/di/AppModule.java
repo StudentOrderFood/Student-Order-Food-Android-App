@@ -24,6 +24,7 @@ import prm392.orderfood.data.datasource.remote.api.CategoryApiService;
 import prm392.orderfood.data.datasource.remote.api.MenuItemApiService;
 import prm392.orderfood.data.datasource.remote.api.PaymentApiService;
 import prm392.orderfood.data.datasource.remote.api.ShopApiService;
+import prm392.orderfood.data.datasource.remote.api.TransactionApi;
 import prm392.orderfood.data.datasource.remote.api.UserApiService;
 import prm392.orderfood.data.network.AuthInterceptor;
 import prm392.orderfood.data.network.RetrofitClient;
@@ -131,5 +132,11 @@ public class AppModule {
     @Provides
     public PaymentApiService providePaymentApiService(Retrofit retrofit) {
         return retrofit.create(PaymentApiService.class);
+    }
+
+    @Singleton
+    @Provides
+    public TransactionApi provideTransactionApi(Retrofit retrofit) {
+        return retrofit.create(TransactionApi.class);
     }
 }
