@@ -10,12 +10,14 @@ import prm392.orderfood.data.repositoryImpl.AuthRepositoryImpl;
 import prm392.orderfood.data.repositoryImpl.CategoryRepositoryImpl;
 import prm392.orderfood.data.repositoryImpl.MenuItemRepositoryImpl;
 import prm392.orderfood.data.repositoryImpl.OrderRepositoryImpl;
+import prm392.orderfood.data.repositoryImpl.PaymentRepositoryImpl;
 import prm392.orderfood.data.repositoryImpl.ShopRepositoryImpl;
 import prm392.orderfood.data.repositoryImpl.UserRepositoryImpl;
 import prm392.orderfood.domain.repositories.AuthRepository;
 import prm392.orderfood.domain.repositories.CategoryRepository;
 import prm392.orderfood.domain.repositories.MenuItemRepository;
 import prm392.orderfood.domain.repositories.OrderRepository;
+import prm392.orderfood.domain.repositories.PaymentRepository;
 import prm392.orderfood.domain.repositories.ShopRepository;
 import prm392.orderfood.domain.repositories.UserRepository;
 
@@ -45,4 +47,8 @@ public abstract class RepositoryModule {
     @Binds
     @Singleton
     public abstract OrderRepository bindOrderRepository(OrderRepositoryImpl impl);
+
+    @Binds
+    @Singleton
+    public abstract PaymentRepository bindPaymentRepository(PaymentRepositoryImpl impl);
 }

@@ -22,6 +22,7 @@ import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.api.AuthApiService;
 import prm392.orderfood.data.datasource.remote.api.CategoryApiService;
 import prm392.orderfood.data.datasource.remote.api.MenuItemApiService;
+import prm392.orderfood.data.datasource.remote.api.PaymentApiService;
 import prm392.orderfood.data.datasource.remote.api.ShopApiService;
 import prm392.orderfood.data.datasource.remote.api.UserApiService;
 import prm392.orderfood.data.network.AuthInterceptor;
@@ -51,9 +52,18 @@ public class AppModule {
             // Create a trust manager that does not validate certificate chains
             TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
-                        @Override public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
-                        @Override public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {}
-                        @Override public java.security.cert.X509Certificate[] getAcceptedIssuers() { return new java.security.cert.X509Certificate[]{}; }
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
                     }
             };
 
@@ -91,6 +101,7 @@ public class AppModule {
     public AuthApiService provideAuthApiService(Retrofit retrofit) {
         return retrofit.create(AuthApiService.class);
     }
+
     // Nếu có các ApiService khác, cung cấp chúng tương tự như AuthApiService
     @Singleton
     @Provides
@@ -114,5 +125,11 @@ public class AppModule {
     @Provides
     public MenuItemApiService provideMenuItemApiService(Retrofit retrofit) {
         return retrofit.create(MenuItemApiService.class);
+    }
+
+    @Singleton
+    @Provides
+    public PaymentApiService providePaymentApiService(Retrofit retrofit) {
+        return retrofit.create(PaymentApiService.class);
     }
 }

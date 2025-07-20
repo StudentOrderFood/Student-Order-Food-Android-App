@@ -149,7 +149,15 @@ public class CartFragment extends Fragment {
                 newOrder.setTotalAmount(CurrencyUtils.parseVNDToDouble(binding.totalPriceTextView.getText().toString()));
                 mOrderViewModel.submitCodOrder(newOrder);
             } else if (binding.radioBank.isChecked()) {
-                // Gửi đơn hàng + điều hướng tới thanh toán online
+                Toast.makeText(getContext(), "Pay Clicked", Toast.LENGTH_SHORT).show();
+                Order newOrder = new Order();
+                newOrder.setCustomerId(Objects.requireNonNull(mUserViewModel.getUserProfileLiveData().getValue()).getUserId());
+                newOrder.setShopId(Objects.requireNonNull(mShopViewModel.getSelectedShop().getValue()).getId());
+                newOrder.setOrderItems(mOrderViewModel.getOrderItemsLiveData().getValue());
+                newOrder.setPaymentMethod("Bank"); // Bank transfer
+                newOrder.setTotalAmount(CurrencyUtils.parseVNDToDouble(binding.totalPriceTextView.getText().toString()));
+                mOrderViewModel.generateQrCode(newOrder);
+                navController.navigate(R.id.action_cartFragment_to_qrDisplayFragment);
             }
         });
     }

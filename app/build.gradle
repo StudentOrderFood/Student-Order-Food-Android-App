@@ -91,4 +91,7 @@ dependencies {
     //OpenStreetMap
     implementation 'org.osmdroid:osmdroid-android:6.1.16'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    implementation 'com.google.zxing:core:3.4.1' // ZXing core
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0' // ZXing Android Embedded
 }
