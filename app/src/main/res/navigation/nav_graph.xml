@@ -125,15 +125,15 @@
         android:label="fragment_food_order"
         tools:layout="@layout/fragment_food_order" >
         <action
-            android:id="@+id/action_cartFragment_to_qrDisplayFragment"
-            app:destination="@id/qrDisplayFragment" />
+            android:id="@+id/action_cartFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment" />
     </fragment>
     <fragment
         android:id="@+id/orderListFragment"
         android:name="prm392.orderfood.androidapp.ui.fragment.shopOwner.OrderListFragment"
         android:label="OrderListFragment" />
     <fragment
-        android:id="@+id/qrDisplayFragment"
-        android:name="prm392.orderfood.androidapp.ui.fragment.customer.QrDisplayFragment"
-        android:label="QrDisplayFragment" />
+        android:id="@+id/paymentFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.customer.PaymentFragment"
+        android:label="PaymentFragment" />
 </navigation>

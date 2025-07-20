@@ -5,7 +5,9 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 import prm392.orderfood.data.datasource.remote.api.PaymentApiService;
 import prm392.orderfood.domain.models.orders.BankingOrderRequest;
-import prm392.orderfood.domain.models.payment.QrCodeResponse;
+import prm392.orderfood.domain.models.payment.CheckOutResponse;
+import prm392.orderfood.domain.models.payment.PaymentResultRequest;
+import prm392.orderfood.domain.models.payment.PaymentResultResponse;
 
 public class PaymentDataSource {
     private final PaymentApiService paymentApiService;
@@ -15,7 +17,11 @@ public class PaymentDataSource {
         this.paymentApiService = paymentApiService;
     }
 
-    public Single<QrCodeResponse> generatePaymentQrCode(BankingOrderRequest request) {
-        return paymentApiService.createPaymentQrCode(request);
+    public Single<CheckOutResponse> createPayment(BankingOrderRequest request) {
+        return paymentApiService.createPayment(request);
+    }
+
+    public Single<PaymentResultResponse> sendPaymentResult(String orderCode, String status) {
+        return paymentApiService.sendPaymentResult(new PaymentResultRequest(orderCode, status));
     }
 }

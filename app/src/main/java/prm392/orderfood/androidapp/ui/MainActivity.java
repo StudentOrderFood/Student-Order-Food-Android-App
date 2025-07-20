@@ -13,8 +13,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.Objects;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.ActivityMainBinding;
@@ -60,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
             } else if (destination.getId() == R.id.shopDetailFragment && "Student".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
                 bottomNavigationView.setVisibility(View.GONE);
             } else if (destination.getId() == R.id.cartFragment) {
+                bottomNavigationView.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.paymentFragment) {
                 bottomNavigationView.setVisibility(View.GONE);
             }
             else {

@@ -21,7 +21,6 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import prm392.orderfood.androidapp.R;
 import prm392.orderfood.androidapp.databinding.FragmentQrDisplayBinding;
 import prm392.orderfood.androidapp.viewModel.OrderViewModel;
 
@@ -61,12 +60,12 @@ public class QrDisplayFragment extends Fragment {
         mOrderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
         navController = Navigation.findNavController(requireView());
 
-        mOrderViewModel.getQrCodeLiveData().observe(getViewLifecycleOwner(), qrContent -> {
-            if (qrContent != null && !qrContent.getQrCode().isEmpty()) {
-                Bitmap bitmap = generateQrCode(qrContent.getQrCode());
-                binding.imgQrCode.setImageBitmap(bitmap);
-            }
-        });
+//        mOrderViewModel.getCheckoutUrlLiveData().observe(getViewLifecycleOwner(), chekoutUrl -> {
+//            if (qrContent != null && !qrContent.getQrCode().isEmpty()) {
+//                Bitmap bitmap = generateQrCode(qrContent.getQrCode());
+//                binding.imgQrCode.setImageBitmap(bitmap);
+//            }
+//        });
 
         startCountdownTimer();
 

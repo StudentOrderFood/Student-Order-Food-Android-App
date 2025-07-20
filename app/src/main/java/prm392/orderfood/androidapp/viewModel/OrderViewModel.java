@@ -20,7 +20,7 @@ import prm392.orderfood.domain.models.orderItem.OrderItemModel;
 import prm392.orderfood.domain.models.orders.BankingOrderRequest;
 import prm392.orderfood.domain.models.orders.Order;
 import prm392.orderfood.domain.models.orders.OrderRealTime;
-import prm392.orderfood.domain.models.payment.QrCodeResponse;
+import prm392.orderfood.domain.models.payment.CheckOutResponse;
 import prm392.orderfood.domain.usecase.OrderUseCase;
 import prm392.orderfood.domain.usecase.PaymentUseCase;
 
@@ -50,9 +50,11 @@ public class OrderViewModel extends ViewModel {
     }
 
     private final MutableLiveData<List<OrderItem>> orderItems = new MutableLiveData<>(new ArrayList<>());
-
     public LiveData<List<OrderItem>> getOrderItemsLiveData() {
         return orderItems;
+    }
+    public void clearOrderItems() {
+        orderItems.setValue(new ArrayList<>());
     }
 
     public void setOrderItems(List<OrderItem> newList) {
@@ -64,9 +66,9 @@ public class OrderViewModel extends ViewModel {
         return ordersByShopId;
     }
 
-    private MutableLiveData<QrCodeResponse> qrCodeLiveData = new MutableLiveData<>();
-    public LiveData<QrCodeResponse> getQrCodeLiveData() {
-        return qrCodeLiveData;
+    private MutableLiveData<CheckOutResponse> checkoutUrlLiveData = new MutableLiveData<>();
+    public LiveData<CheckOutResponse> getCheckoutUrlLiveData() {
+        return checkoutUrlLiveData;
     }
 
     public void addItemToOrder(MenuItemResponse menuItem, int quantity) {
@@ -127,20 +129,37 @@ public class OrderViewModel extends ViewModel {
         bankingOrderRequest.setPayosOrderCode(generate11DigitOrderCode());
 
         mCompositeDisposable.add(
-                paymentUseCase.generatePaymentQrCode(bankingOrderRequest)
+                paymentUseCase.createPayment(bankingOrderRequest)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                qrCode -> {
-                                    qrCodeLiveData.setValue(qrCode);
-                                    orderItems.setValue(new ArrayList<>()); // Clear the cart after successful order
-                                    toastMessage.setValue("QR Code generated successfully");
+                                url -> {
+                                    checkoutUrlLiveData.setValue(url);
                                 },
                                 throwable -> {
-                                    errorMessage.setValue("Failed to generate QR Code" + throwable.getMessage());
+                                    errorMessage.setValue("Cannot create payment qrcode" + throwable.getMessage());
                                 }
                         )
         );
 
+    }
+
+    public void sendPaymentResult(String orderCode, String status) {
+        mCompositeDisposable.add(
+                paymentUseCase.sendPaymentResult(orderCode, status)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                response -> {
+                                    if (response.getMessage() != null) {
+                                        toastMessage.setValue(response.getMessage());
+                                    } else {
+                                        toastMessage.setValue("Payment result sent successfully for order: " + response.getOrderCode());
+                                    }
+                                },
+                                throwable -> {
+                                    errorMessage.setValue("Failed to send payment result: " + throwable.getMessage());
+                                }
+                        )
+        );
     }
 
     public void getOrdersByShopId(String shopId) {
