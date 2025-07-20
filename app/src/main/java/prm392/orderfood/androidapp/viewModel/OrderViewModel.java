@@ -112,7 +112,7 @@ public class OrderViewModel extends ViewModel {
         bankingOrderRequest.setShopId(newOrder.getShopId());
         bankingOrderRequest.setPaymentMethod(newOrder.getPaymentMethod());
         bankingOrderRequest.setTotalAmount(newOrder.getTotalAmount());
-        bankingOrderRequest.setOrderStatus("Pending");
+        bankingOrderRequest.setOrderStatus("Confirmed");
 
         // Mapping order items to OrderItemModels
         List<OrderItemModel> orderItemModels = new ArrayList<>();
