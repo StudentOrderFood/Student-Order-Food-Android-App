@@ -114,7 +114,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_20"
-                    android:backgroundTint="@color/primary_color"
                     android:text="Send"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tilOtpInput"

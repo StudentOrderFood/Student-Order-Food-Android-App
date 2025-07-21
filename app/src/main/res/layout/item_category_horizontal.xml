@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/card_border"
+            android:background="@drawable/card_gradient_border"
             android:gravity="center">
 
             <ImageView
@@ -26,14 +26,16 @@
                 android:layout_height="28dp"
                 android:src="@drawable/ic_coffee"
                 app:tint="#FF8F00" />
+
             <TextView
                 android:id="@+id/tvCategoryName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="All"
                 android:layout_marginLeft="20px"
+                android:fontFamily="@font/abeezee"
+                android:text="All"
                 android:textColor="#666666"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
