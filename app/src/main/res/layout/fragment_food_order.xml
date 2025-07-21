@@ -103,6 +103,8 @@
         </LinearLayout>
 
         <!-- Payment method selection -->
+
+        <!-- Checkout button -->
         <RadioGroup
             android:id="@+id/paymentMethodGroup"
             android:layout_width="match_parent"
@@ -115,18 +117,17 @@
                 android:id="@+id/radioCod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="COD"
-                android:checked="true" />
+                android:checked="true"
+                android:text="COD" />
 
             <RadioButton
                 android:id="@+id/radioBank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ngân hàng"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="16dp"
+                android:text="Bank Transfer" />
         </RadioGroup>
 
-        <!-- Checkout button -->
         <Button
             android:id="@+id/checkoutButton"
             android:layout_width="match_parent"

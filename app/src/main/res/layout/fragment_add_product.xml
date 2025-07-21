@@ -15,15 +15,15 @@
             android:id="@+id/tvAddProductTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/abeezee"
+            android:gravity="center"
             android:text="Add New Product"
+            android:textColor="#333333"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#333333"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="24dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Name -->
         <EditText
@@ -84,11 +84,12 @@
         <!-- Image Picker Button -->
         <Button
             android:id="@+id/btnPickImage"
+
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Choose Image from Gallery"
-            android:backgroundTint="@color/primary_color"
             android:textColor="@android:color/white"
+            style="@style/AppButtonStyle"
             app:layout_constraintTop_toBottomOf="@id/etDescription"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -121,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                android:backgroundTint="@color/primary_color"
+                android:backgroundTint="@color/red"
                 android:text="Cancel"
                 android:textColor="@android:color/white" />
 
@@ -129,7 +130,6 @@
                 android:id="@+id/btnSubmit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/primary_color"
                 android:text="Submit"
                 android:textColor="@android:color/white" />
         </LinearLayout>
