@@ -11,8 +11,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://10.0.2.2:7111/";
+//    private static final String BASE_URL = "https://10.0.2.2:7111/";
 //    private static final String BASE_URL = "https://192.168.0.101:7111/";
+    private static final String BASE_URL = "https://api-backend.orderfood.audivia.vn/";
 
     public static Retrofit create(OkHttpClient client) {
         Gson gson = new GsonBuilder()
