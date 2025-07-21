@@ -48,8 +48,4 @@
             <corners android:radius="8dp"/>
         </shape>
     </drawable>
-    <selector xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:color="@color/radio_checked_color" android:state_checked="true"/>
-        <item android:color="@color/radio_unchecked_color"/>
-    </selector>
 </resources>
