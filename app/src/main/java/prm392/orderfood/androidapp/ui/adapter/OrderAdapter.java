@@ -64,7 +64,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         }
 
         holder.binding.tvCustomerId.setText("Customer: " + customer.getName());
-        holder.binding.tvCusPhone.setText("Phone: " + customer.getPhoneNumber());
+        holder.binding.tvCustomerPhone.setText("Phone: " + customer.getPhoneNumber());
         holder.binding.tvPaymentMethod.setText("PaymentMethod: " + order.getPaymentMethod());
         holder.binding.tvTotalAmount.setText("Total Amount: " + CurrencyUtils.formatToVND(order.getTotalAmount()));
         holder.binding.tvOrderStatus.setText("Status: " + order.getOrderStatus());

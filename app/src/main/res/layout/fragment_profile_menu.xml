@@ -115,15 +115,15 @@
                             android:textColor="@color/secondary_text"
                             android:textSize="14sp" />
 
-                        <RatingBar
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:isIndicator="true"
-                            android:numStars="5"
-                            android:rating="4.5"
-                            android:stepSize="0.5"
-                            style="@style/Widget.AppCompat.RatingBar.Small" />
+<!--                        <RatingBar-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:isIndicator="true"-->
+<!--                            android:numStars="5"-->
+<!--                            android:rating="4.5"-->
+<!--                            android:stepSize="0.5"-->
+<!--                            style="@style/Widget.AppCompat.RatingBar.Small" />-->
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -356,7 +356,7 @@
 
                     <!-- Cart -->
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/llCart"
+                        android:id="@+id/llPendingOrders"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -384,7 +384,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="16dp"
                                 android:layout_weight="1"
-                                android:text="Cart"
+                                android:text="Pending Order"
                                 android:textColor="@color/primary_text"
                                 android:textSize="16sp" />
 

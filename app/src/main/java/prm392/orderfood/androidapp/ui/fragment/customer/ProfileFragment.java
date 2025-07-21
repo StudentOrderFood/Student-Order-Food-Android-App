@@ -123,7 +123,7 @@ public class ProfileFragment extends Fragment {
 
         mUserViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "setupObservers: " + errorMessage);
             }
         });

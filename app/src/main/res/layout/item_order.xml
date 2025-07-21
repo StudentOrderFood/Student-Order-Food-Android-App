@@ -20,12 +20,12 @@
             android:id="@+id/headerSection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingBottom="8dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <!-- Customer Info -->
             <LinearLayout
@@ -39,12 +39,12 @@
                     android:id="@+id/tvCustomerId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="Nguyễn Văn A"
                     android:textColor="@color/primary_text"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:ellipsize="end"
-                    android:maxLines="1" />
+                    android:textStyle="bold" />
 
                 <!-- Customer Phone -->
                 <TextView
@@ -62,14 +62,14 @@
                 android:id="@+id/tvOrderStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PENDING"
-                android:textColor="@color/status_pending"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textAllCaps="true"
                 android:background="@drawable/bg_status_pending"
                 android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp" />
+                android:paddingVertical="4dp"
+                android:text="PENDING"
+                android:textAllCaps="true"
+                android:textColor="@color/status_pending"
+                android:textSize="12sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- Divider -->
@@ -78,35 +78,35 @@
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:background="@color/divider_color"
-            app:layout_constraintTop_toBottomOf="@id/headerSection"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/headerSection" />
 
         <!-- Customer Phone -->
-        <TextView
-            android:id="@+id/tvCusPhone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Phone Number: 0123 456 789"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvCustomerId"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvCusPhone"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            android:text="Phone Number: 0123 456 789"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:textSize="16sp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tvCustomerId" />-->
 
         <!-- Order Status -->
-        <TextView
-            android:id="@+id/tvOrderStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status: Pending"
-            android:textStyle="italic"
-            android:textColor="@android:color/holo_orange_dark"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvCusPhone"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="4dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvOrderStatus"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            android:text="Status: Pending"-->
+<!--            android:textColor="@android:color/holo_orange_dark"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textStyle="italic"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tvCusPhone" />-->
 
         <!-- RecyclerView hiển thị danh sách món ăn -->
         <!-- Order Items -->
@@ -117,9 +117,9 @@
             android:layout_marginTop="12dp"
             android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/headerSection"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerSection"
             tools:itemCount="3"
             tools:listitem="@layout/item_order_item" />
 
@@ -129,11 +129,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
-            app:layout_constraintTop_toBottomOf="@id/rvOrderItems"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/rvOrderItems">
 
             <!-- Payment Method -->
             <TextView
@@ -162,67 +162,66 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:orientation="horizontal"
             android:gravity="end"
-            app:layout_constraintTop_toBottomOf="@id/paymentInfoSection"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/paymentInfoSection">
 
             <!-- Cancel Button -->
             <Button
                 android:id="@+id/btnCancel"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="REJECT"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:textAllCaps="true"
                 android:textColor="@color/error_color"
                 android:textSize="12sp"
-                android:textAllCaps="true"
                 app:strokeColor="@color/error_color"
                 app:strokeWidth="1dp" />
 
             <!-- Confirm Button -->
             <Button
                 android:id="@+id/btnConfirm"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_marginStart="8dp"
-                android:text="CONFIRM"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.Button"
                 android:backgroundTint="@color/primary_color"
+                android:text="CONFIRM"
+                android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:textAllCaps="true" />
+                />
 
             <!-- Delivered Button -->
             <Button
                 android:id="@+id/btnDelivered"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_marginStart="8dp"
-                android:text="DELIVERED"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.Button"
                 android:backgroundTint="@color/success_color"
+                android:text="DELIVERED"
+                android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:textAllCaps="true" />
+                />
 
             <!-- Done Button -->
             <Button
                 android:id="@+id/btnDone"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_marginStart="8dp"
-                android:text="DONE"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.Button"
                 android:backgroundTint="@color/success_color"
+                android:text="DONE"
+                android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:textAllCaps="true" />
+                />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
