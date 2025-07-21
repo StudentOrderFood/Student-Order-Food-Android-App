@@ -240,7 +240,9 @@ public class ShopViewModel extends ViewModel {
                         .subscribe(
                                 success -> {
                                     _loading.setValue(false);
-                                    Objects.requireNonNull(_shopDetailResponse.getValue()).getMenuItems().add(success.body());
+                                    _shopDetailResponse.getValue().getMenuItems().add(success.body());
+                                    if (_shopDetailResponse.getValue().getMenuItems() == null) {
+                                    }
                                     toastMessage.setValue("Menu item added successfully");
                                 },
                                 error -> handleError("Add item to shop", error)

@@ -102,7 +102,7 @@ public class ShopDetailFragment extends Fragment {
 
         if ("ShopOwner".equalsIgnoreCase(mAuthViewModel.getUserRole().getValue())) {
         } else {
-            binding.btnAddProd. setVisibility(View.GONE);
+            binding.btnAddProd.setVisibility(View.GONE);
         }
 
         mUserViewModel.getAllCustomers();
@@ -203,7 +203,7 @@ public class ShopDetailFragment extends Fragment {
             // Set shop name
             binding.tvShopName.setText(shopDetailResponse.getName());
             // set shop rating
-            binding.tvShopRating.setText(String.valueOf(shopDetailResponse.getRating()));
+//            binding.tvShopRating.setText(String.valueOf(shopDetailResponse.getRating()));
 
             // Set Open/End Hours
             try {

@@ -1,5 +1,6 @@
 package prm392.orderfood.domain.models.shops;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import prm392.orderfood.domain.models.category.CategoriesInShopMenu;
@@ -106,6 +107,9 @@ public class ShopDetailResponse {
     }
 
     public List<MenuItemResponse> getMenuItems() {
+        if (menuItems == null) {
+            menuItems = new ArrayList<>();
+        }
         return menuItems;
     }
 

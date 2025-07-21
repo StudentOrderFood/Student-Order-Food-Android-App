@@ -157,40 +157,40 @@
                         android:orientation="horizontal">
 
                         <!-- Rating -->
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardBackgroundColor="#FFF8E1"
-                            app:cardCornerRadius="16dp"
-                            app:cardElevation="2dp">
+<!--                        <androidx.cardview.widget.CardView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            app:cardBackgroundColor="#FFF8E1"-->
+<!--                            app:cardCornerRadius="16dp"-->
+<!--                            app:cardElevation="2dp">-->
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                android:paddingStart="12dp"
-                                android:paddingTop="8dp"
-                                android:paddingEnd="12dp"
-                                android:paddingBottom="8dp">
+<!--                            <LinearLayout-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:gravity="center_vertical"-->
+<!--                                android:orientation="horizontal"-->
+<!--                                android:paddingStart="12dp"-->
+<!--                                android:paddingTop="8dp"-->
+<!--                                android:paddingEnd="12dp"-->
+<!--                                android:paddingBottom="8dp">-->
 
-                                <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_star_filled"
-                                    app:tint="#FF8F00" />
+<!--                                <ImageView-->
+<!--                                    android:layout_width="16dp"-->
+<!--                                    android:layout_height="16dp"-->
+<!--                                    android:src="@drawable/ic_star_filled"-->
+<!--                                    app:tint="#FF8F00" />-->
 
-                                <TextView
-                                    android:id="@+id/tvShopRating"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
-                                    android:text="4.8"
-                                    android:textColor="#FF8F00"
-                                    android:textSize="15sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
+<!--                                <TextView-->
+<!--                                    android:id="@+id/tvShopRating"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_marginStart="6dp"-->
+<!--                                    android:text="4.8"-->
+<!--                                    android:textColor="#FF8F00"-->
+<!--                                    android:textSize="15sp"-->
+<!--                                    android:textStyle="bold" />-->
+<!--                            </LinearLayout>-->
+<!--                        </androidx.cardview.widget.CardView>-->
 
                         <!-- Delivery Time -->
                         <androidx.cardview.widget.CardView
@@ -446,7 +446,7 @@
                     app:cardElevation="2dp">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
@@ -461,8 +461,8 @@
 
                             <FrameLayout
                                 android:id="@+id/btnMinus"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:clickable="true"
                                 android:contentDescription="Decrease quantity"
@@ -478,7 +478,7 @@
 
                             <TextView
                                 android:id="@+id/tvQuantity"
-                                android:layout_width="48dp"
+                                android:layout_width="24dp"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="1"
@@ -488,8 +488,8 @@
 
                             <FrameLayout
                                 android:id="@+id/btnPlus"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:clickable="true"
                                 android:contentDescription="Increase quantity"
