@@ -31,6 +31,13 @@
     <color name="grey_200">#EEEEEE</color>
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_600">#757575</color>
+
+
+    <!-- Thêm vào cuối file -->
+    <color name="radio_checked_color">#FF6D00</color> <!-- Dùng màu cam primary -->
+    <color name="radio_unchecked_color">#BDBDBD</color> <!-- Dùng màu grey_400 -->
+
+
     <!-- Màu gradient (nếu muốn) -->
     <drawable name="orange_gradient">
         <shape>
