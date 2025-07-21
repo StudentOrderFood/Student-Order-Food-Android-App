@@ -14,63 +14,83 @@ import java.util.List;
 import java.util.Set;
 
 import prm392.orderfood.androidapp.R;
-import prm392.orderfood.androidapp.databinding.ItemOrderBinding;
+import prm392.orderfood.androidapp.databinding.ItemPendingOrderBinding;
 import prm392.orderfood.androidapp.utils.CurrencyUtils;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 import prm392.orderfood.domain.models.orders.OrderRealTime;
-import prm392.orderfood.domain.models.users.CustomerResponse;
+import prm392.orderfood.domain.models.shops.PopularShopResponse;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
+public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapter.PendingOrderViewHolder>{
     private final List<OrderRealTime> orders;
-    private final List<MenuItemResponse> menuItems; // danh sách món từ ShopViewModel
-    private final List<CustomerResponse> customers; // danh sách khách hàng từ UserViewModel
+    private final List<MenuItemResponse> menuItems;
+    private final List<PopularShopResponse> shops;
     private final Set<String> highlightedOrders = new HashSet<>();
-    private OnOrderActionListener listener;
 
-    public interface OnOrderActionListener {
-        void onConfirmClicked(OrderRealTime order);
-        void onCancelClicked(OrderRealTime order);
-        void onDeliveredClicked(OrderRealTime order);
-        void onDoneClicked(OrderRealTime order);
-    }
-
-    public OrderAdapter(List<OrderRealTime> orders, List<MenuItemResponse> menuItems, OnOrderActionListener listener, List<CustomerResponse> customers) {
+    public PendingOrderAdapter(List<OrderRealTime> orders, List<MenuItemResponse> menuItems, List<PopularShopResponse> shops) {
         this.orders = orders;
         this.menuItems = menuItems;
-        this.listener = listener;
-        this.customers = customers;
+        this.shops = shops;
     }
 
     @NonNull
     @Override
-    public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PendingOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemOrderBinding binding = ItemOrderBinding.inflate(inflater, parent, false);
-        return new OrderViewHolder(binding);
+        ItemPendingOrderBinding binding = ItemPendingOrderBinding.inflate(inflater, parent, false);
+        return new PendingOrderAdapter.PendingOrderViewHolder(binding);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PendingOrderViewHolder holder, int position) {
         OrderRealTime order = orders.get(position);
-
-        // Filter Customer
-        CustomerResponse customer = new CustomerResponse();
-        for (CustomerResponse c : customers) {
-            if (c.getId().equals(order.getCustomerId())) {
-                customer = c;
+        // Filter shop details
+        PopularShopResponse shop = new PopularShopResponse();
+        for (PopularShopResponse s : shops) {
+            if (s.getId().equals(order.getShopId())) {
+                shop = s;
                 break;
             }
         }
 
-        holder.binding.tvCustomerId.setText("Customer: " + customer.getName());
-        holder.binding.tvCusPhone.setText("Phone: " + customer.getPhoneNumber());
-        holder.binding.tvPaymentMethod.setText("PaymentMethod: " + order.getPaymentMethod());
-        holder.binding.tvTotalAmount.setText("Total Amount: " + CurrencyUtils.formatToVND(order.getTotalAmount()));
+        holder.binding.tvShopId.setText("Shop: " + shop.getName());
+        holder.binding.tvShopAddress.setText("Address: " + shop.getAddress());
+        holder.binding.tvPaymentMethod.setText("Payment Method: " + order.getPaymentMethod());
+        holder.binding.tvTotalAmount.setText("TotalAmount: " + CurrencyUtils.formatToVND(order.getTotalAmount()));
         holder.binding.tvOrderStatus.setText("Status: " + order.getOrderStatus());
+
         // Nested RecyclerView
         OrderItemAdapter itemAdapter = new OrderItemAdapter(order.getOrderItems(), menuItems);
         holder.binding.rvOrderItems.setAdapter(itemAdapter);
+
+        holder.binding.btnConfirm.setVisibility(View.GONE);
+        holder.binding.btnCancel.setVisibility(View.GONE);
+        holder.binding.btnDelivered.setVisibility(View.GONE);
+        holder.binding.btnDone.setVisibility(View.GONE);
+
+        // Hiển thị trạng thái
+        switch (order.getOrderStatus()) {
+            case "Pending":
+                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_orange_dark));
+                break;
+            case "Confirmed":
+                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.teal_700));
+                break;
+            case "Delivered":
+                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.primary_color));
+                break;
+            case "Completed":
+                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_green_dark));
+                break;
+
+            case "Cancelled":
+                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_red_dark));
+                break;
+
+            default:
+                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.darker_gray));
+                break;
+        }
 
         // Highlight
         if (highlightedOrders.contains(order.getFirebaseId())) {
@@ -87,57 +107,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         } else {
             holder.binding.getRoot().setBackgroundColor(0xFFFFFFFF);
         }
-
-        // Reset visibility về GONE trước khi kiểm tra
-        holder.binding.btnConfirm.setVisibility(View.GONE);
-        holder.binding.btnCancel.setVisibility(View.GONE);
-        holder.binding.btnDelivered.setVisibility(View.GONE);
-        holder.binding.btnDone.setVisibility(View.GONE);
-
-        // Hiển thị nút theo trạng thái
-        switch (order.getOrderStatus()) {
-            case "Pending":
-                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_orange_dark));
-                holder.binding.btnConfirm.setVisibility(View.VISIBLE);
-                holder.binding.btnCancel.setVisibility(View.VISIBLE);
-                break;
-            case "Confirmed":
-                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.teal_700));
-                holder.binding.btnDelivered.setVisibility(View.VISIBLE);
-                break;
-            case "Delivered":
-                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.primary_color));
-                holder.binding.btnDone.setVisibility(View.VISIBLE);
-                break;
-            case "Completed":
-                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_green_dark));
-                break;
-
-            case "Cancelled":
-                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_red_dark));
-                break;
-
-            default:
-                holder.binding.tvOrderStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.darker_gray));
-                break;
-        }
-
-        holder.binding.btnConfirm.setOnClickListener(v -> {
-            if (listener != null) listener.onConfirmClicked(order);
-        });
-
-        holder.binding.btnCancel.setOnClickListener(v -> {
-            if (listener != null) listener.onCancelClicked(order);
-        });
-
-        holder.binding.btnDelivered.setOnClickListener(v -> {
-            if (listener != null) listener.onDeliveredClicked(order);
-        });
-
-        holder.binding.btnDone.setOnClickListener(v -> {
-            if (listener != null) listener.onDoneClicked(order);
-        });
-
     }
 
     @Override
@@ -173,10 +142,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         return -1;
     }
 
-    static class OrderViewHolder extends RecyclerView.ViewHolder {
-        final ItemOrderBinding binding;
+    static class PendingOrderViewHolder extends RecyclerView.ViewHolder {
+        final ItemPendingOrderBinding binding;
 
-        public OrderViewHolder(ItemOrderBinding binding) {
+        public PendingOrderViewHolder(ItemPendingOrderBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

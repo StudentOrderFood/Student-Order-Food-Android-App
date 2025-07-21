@@ -37,4 +37,10 @@ public class OrderUseCase {
         return orderRepository.updateOrderStatus(orderId, status)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Flowable<List<OrderRealTime>> getOrdersByUserId(String userId) {
+        // Logic to get orders by user ID
+        return orderRepository.getOrdersByUserId(userId)
+                .subscribeOn(Schedulers.io());
+    }
 }

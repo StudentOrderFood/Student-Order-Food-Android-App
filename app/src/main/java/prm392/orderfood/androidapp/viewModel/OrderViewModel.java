@@ -66,6 +66,11 @@ public class OrderViewModel extends ViewModel {
         return ordersByShopId;
     }
 
+    public MutableLiveData<List<OrderRealTime>> pendingOrders = new MutableLiveData<>(new ArrayList<>());
+    public LiveData<List<OrderRealTime>> getPendingOrdersLiveData() {
+        return pendingOrders;
+    }
+
     private MutableLiveData<CheckOutResponse> checkoutUrlLiveData = new MutableLiveData<>();
     public LiveData<CheckOutResponse> getCheckoutUrlLiveData() {
         return checkoutUrlLiveData;
@@ -168,10 +173,30 @@ public class OrderViewModel extends ViewModel {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 orders -> {
+                                    if (orders == null || orders.isEmpty()) {
+                                        ordersByShopId.setValue(new ArrayList<>());
+                                        return;
+                                    }
                                     ordersByShopId.setValue(orders);
+
                                 },
                                 throwable -> {
                                     errorMessage.setValue("Failed to fetch orders: " + throwable.getMessage());
+                                }
+                        )
+        );
+    }
+
+    public void getPendingOrders(String cusId) {
+        mCompositeDisposable.add(
+                orderUseCase.getOrdersByUserId(cusId)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                orders -> {
+                                    pendingOrders.setValue(orders);
+                                },
+                                throwable -> {
+                                    errorMessage.setValue("Failed to fetch pending orders: " + throwable.getMessage());
                                 }
                         )
         );

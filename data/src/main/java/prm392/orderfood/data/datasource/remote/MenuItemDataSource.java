@@ -1,6 +1,7 @@
 package prm392.orderfood.data.datasource.remote;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,6 +51,10 @@ public class MenuItemDataSource {
 
     public Single<ApiResponse<String>> deleteMenuItem(String menuItemId) {
         return api.deleteMenuItem(menuItemId);
+    }
+
+    public Single<ApiResponse<List<MenuItemResponse>>> getAllMenuItems() {
+        return api.getAllMenuItems();
     }
 
     private MultipartBody.Part toMultipartBody(String name, File file) {

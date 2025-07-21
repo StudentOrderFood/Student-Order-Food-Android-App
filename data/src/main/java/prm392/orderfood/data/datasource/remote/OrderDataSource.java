@@ -89,4 +89,34 @@ public class OrderDataSource {
         });
     }
 
+    public Flowable<List<OrderRealTime>> getOrdersByUserId(String userId) {
+        return Flowable.create(emitter -> {
+            ValueEventListener listener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<OrderRealTime> orders = new ArrayList<>();
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        OrderFireBase order = childSnapshot.getValue(OrderFireBase.class);
+                        String firebaseId = childSnapshot.getKey();
+                        if (order != null && !"completed".equalsIgnoreCase(order.getOrderStatus())) {
+                            orders.add(FireBaseMapper.mapToOrderRealTime(order, firebaseId));
+                        }
+                    }
+                    emitter.onNext(orders);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    emitter.onError(error.toException());
+                }
+            };
+
+            Query query = databaseReference.orderByChild("customerId").equalTo(userId);
+            query.addValueEventListener(listener);
+
+            // Remove listener when Flowable is canceled
+            emitter.setCancellable(() -> query.removeEventListener(listener));
+        }, BackpressureStrategy.LATEST); // LATEST: giữ giá trị mới nhất nếu không xử lý kịp
+    }
+
 }

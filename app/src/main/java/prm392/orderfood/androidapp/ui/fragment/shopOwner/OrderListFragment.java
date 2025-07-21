@@ -21,6 +21,7 @@ import prm392.orderfood.androidapp.databinding.FragmentOrderListBinding;
 import prm392.orderfood.androidapp.ui.adapter.OrderAdapter;
 import prm392.orderfood.androidapp.viewModel.OrderViewModel;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
+import prm392.orderfood.androidapp.viewModel.UserViewModel;
 import prm392.orderfood.domain.models.orders.OrderRealTime;
 
 public class OrderListFragment extends Fragment {
@@ -29,6 +30,7 @@ public class OrderListFragment extends Fragment {
     private NavController navController;
     private OrderViewModel mOrderViewModel;
     private ShopViewModel mShopViewModel;
+    private UserViewModel mUserViewModel;
     private OrderAdapter adapter;
     private final List<OrderRealTime> orderList = new ArrayList<>();
 
@@ -51,6 +53,7 @@ public class OrderListFragment extends Fragment {
         // Initialize ViewModel
         mOrderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
         mShopViewModel = new ViewModelProvider(requireActivity()).get(ShopViewModel.class);
+        mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
         setupAdapter();
         setUpObservers();
@@ -78,7 +81,7 @@ public class OrderListFragment extends Fragment {
             public void onDoneClicked(OrderRealTime order) {
                 mOrderViewModel.updateOrderStatus(order.getFirebaseId(), "Completed");
             }
-        });
+        }, mUserViewModel.getCustomerResponseLiveData().getValue());
         binding.rvOrders.setAdapter(adapter);
     }
 

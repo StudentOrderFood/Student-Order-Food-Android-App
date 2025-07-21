@@ -14,6 +14,8 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import prm392.orderfood.androidapp.utils.PhoneNumberUtils;
+import prm392.orderfood.domain.models.users.CustomerResponse;
 import prm392.orderfood.domain.models.users.UserProfile;
 import prm392.orderfood.domain.usecase.UserUseCase;
 
@@ -52,6 +55,11 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Boolean> getUpdateStatus() {
         return updateStatus;
+    }
+
+    private final MutableLiveData<List<CustomerResponse>> customerResponseLiveData = new MutableLiveData<>(new ArrayList<>());
+    public LiveData<List<CustomerResponse>> getCustomerResponseLiveData() {
+        return customerResponseLiveData;
     }
 
     // MutableLiveData để lưu trữ trạng thái gửi OTP
@@ -218,6 +226,23 @@ public class UserViewModel extends ViewModel {
                         errorMessage.setValue("OTP verification failed");
                     }
                 });
+    }
+
+
+    public void getAllCustomers() {
+        Disposable disposable = userUseCase.getAllCustomers()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        customers -> {
+                            if (customers != null && !customers.isEmpty()) {
+                                customerResponseLiveData.setValue(customers);
+                            }
+                        },
+                        throwable -> {
+                            errorMessage.setValue("Failed to fetch customers: " + throwable.getMessage());
+                        }
+                );
+        mCompositeDisposable.add(disposable);
     }
 
     @Override

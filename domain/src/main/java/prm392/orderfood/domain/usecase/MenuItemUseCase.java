@@ -1,6 +1,7 @@
 package prm392.orderfood.domain.usecase;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,6 +32,11 @@ public class MenuItemUseCase {
 
     public Single<String> deleteMenuItem(String menuItemId) {
         return menuItemRepository.deleteMenuItem(menuItemId)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<List<MenuItemResponse>> getAllMenuItems() {
+        return menuItemRepository.getAllMenuItems()
                 .subscribeOn(Schedulers.io());
     }
 

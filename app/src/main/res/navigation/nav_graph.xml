@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_profileFragment_to_phoneInputFragment"
             app:destination="@id/phoneInputFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_pendingOrdersFragment"
+            app:destination="@id/pendingOrdersFragment" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"
@@ -141,4 +144,9 @@
         android:name="prm392.orderfood.androidapp.ui.fragment.customer.WalletFragment"
         android:label="WalletFragment"
         tools:layout="@layout/fragment_wallet" />
+    <fragment
+        android:id="@+id/pendingOrdersFragment"
+        android:name="prm392.orderfood.androidapp.ui.fragment.customer.PendingOrdersFragment"
+        android:label="fragment_pending_orders"
+        tools:layout="@layout/fragment_pending_orders" />
 </navigation>

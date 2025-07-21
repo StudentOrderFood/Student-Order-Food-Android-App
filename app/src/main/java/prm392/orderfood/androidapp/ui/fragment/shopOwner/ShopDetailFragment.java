@@ -37,6 +37,7 @@ import prm392.orderfood.androidapp.utils.CurrencyUtils;
 import prm392.orderfood.androidapp.viewModel.AuthViewModel;
 import prm392.orderfood.androidapp.viewModel.OrderViewModel;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
+import prm392.orderfood.androidapp.viewModel.UserViewModel;
 import prm392.orderfood.domain.models.category.CategoriesInShopMenu;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 
@@ -48,6 +49,7 @@ public class ShopDetailFragment extends Fragment {
     private ShopViewModel mShopViewModel;
     private AuthViewModel mAuthViewModel;
     private OrderViewModel mOrderViewModel;
+    private UserViewModel mUserViewModel;
     private NavController navController;
 
     private RecyclerView recyclerCategory;
@@ -85,6 +87,7 @@ public class ShopDetailFragment extends Fragment {
         mShopViewModel = new ViewModelProvider(requireActivity()).get(ShopViewModel.class);
         mAuthViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         mOrderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         navController = Navigation.findNavController(requireView());
         recyclerCategory = binding.recyclerCategory;
         recyclerMenuItem = binding.recyclerMenuItems;
@@ -101,6 +104,8 @@ public class ShopDetailFragment extends Fragment {
         } else {
             binding.btnAddProd. setVisibility(View.GONE);
         }
+
+        mUserViewModel.getAllCustomers();
     }
 
     private void setUpEvents() {

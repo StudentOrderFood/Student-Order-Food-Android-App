@@ -1,6 +1,9 @@
 package prm392.orderfood.domain.repositories;
 
+import java.util.List;
+
 import io.reactivex.Single;
+import prm392.orderfood.domain.models.users.CustomerResponse;
 import prm392.orderfood.domain.models.users.UserProfile;
 import retrofit2.Response;
 
@@ -22,4 +25,5 @@ public interface UserRepository {
      */
     Single<Response<String>> updateUserProfile(UserProfile userProfile);
     Single<Response<String>> checkPhoneNumberExists(String phoneNumber);
+    Single<List<CustomerResponse>> getAllCustomers();
 }

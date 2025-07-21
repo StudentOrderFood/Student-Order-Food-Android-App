@@ -15,10 +15,10 @@
 
         <!-- Customer ID -->
         <TextView
-            android:id="@+id/tvCustomerId"
+            android:id="@+id/tvShopId"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Customer: Nguyễn Văn A"
+            android:text="Shop: Nguyễn Văn A"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -28,13 +28,13 @@
 
         <!-- Customer Phone -->
         <TextView
-            android:id="@+id/tvCusPhone"
+            android:id="@+id/tvShopAddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Phone Number: 0123 456 789"
+            android:text="Shop Address: 123 Đường ABC, Quận 1, TP.HCM"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvCustomerId"
+            app:layout_constraintTop_toBottomOf="@id/tvShopId"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="4dp" />
@@ -48,7 +48,7 @@
             android:textStyle="italic"
             android:textColor="@android:color/holo_orange_dark"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvCusPhone"
+            app:layout_constraintTop_toBottomOf="@id/tvShopAddress"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="4dp" />
 

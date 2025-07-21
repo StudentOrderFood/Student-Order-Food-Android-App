@@ -97,6 +97,7 @@ public class ProfileFragment extends Fragment {
                     binding.llWallet.setVisibility(View.VISIBLE);
                     String formatted = CurrencyUtils.formatToVND(userProfile.getWalletBalance());
                     binding.tvWalletBalance.setText(formatted);
+                    binding.llPendingOrders.setVisibility(View.GONE);
                 } else {
                     binding.llWallet.setVisibility(View.GONE);
                 }
@@ -153,6 +154,15 @@ public class ProfileFragment extends Fragment {
                 );
 
                 Toast.makeText(requireContext(), "Logout successfully", Toast.LENGTH_SHORT).show();
+            });
+        });
+
+        binding.llPendingOrders.setOnClickListener(v -> {
+            mAuthViewModel.getUserRole().observe(getViewLifecycleOwner(), userRole -> {
+                if ("Student".equalsIgnoreCase(userRole)) {
+                    //Nav to your Pending Orders Fragment
+                    navController.navigate(R.id.action_profileFragment_to_pendingOrdersFragment);
+                }
             });
         });
 

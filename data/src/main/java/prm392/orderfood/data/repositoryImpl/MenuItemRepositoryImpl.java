@@ -1,6 +1,7 @@
 package prm392.orderfood.data.repositoryImpl;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -54,6 +55,19 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
                         return "Delete menu item successfully";
                     } else {
                         String errorMessage = response.getMessage() != null ? response.getMessage() : "Failed to delete menu item";
+                        throw new RuntimeException(errorMessage);
+                    }
+                });
+    }
+
+    @Override
+    public Single<List<MenuItemResponse>> getAllMenuItems() {
+        return menuItemDataSource.getAllMenuItems()
+                .map(response -> {
+                    if(response.isSuccess()) {
+                        return response.getData();
+                    } else {
+                        String errorMessage = response.getMessage() != null ? response.getMessage() : "Failed to fetch menu items";
                         throw new RuntimeException(errorMessage);
                     }
                 });

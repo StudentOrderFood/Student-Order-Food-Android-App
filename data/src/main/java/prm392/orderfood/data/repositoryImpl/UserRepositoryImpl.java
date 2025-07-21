@@ -1,11 +1,14 @@
 package prm392.orderfood.data.repositoryImpl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.Single;
 import prm392.orderfood.data.datasource.local.TokenLocalDataSource;
 import prm392.orderfood.data.datasource.remote.UserDataSource;
 import prm392.orderfood.data.mapper.UserMapper;
+import prm392.orderfood.domain.models.users.CustomerResponse;
 import prm392.orderfood.domain.models.users.UserProfile;
 import prm392.orderfood.domain.repositories.UserRepository;
 import retrofit2.Response;
@@ -65,6 +68,18 @@ public class UserRepositoryImpl implements UserRepository {
                     } else {
                         String errorMessage = response.getMessage() != null ? response.getMessage() : "Phone number does not exist";
                         return Response.error(400, okhttp3.ResponseBody.create(errorMessage, null));
+                    }
+                });
+    }
+
+    @Override
+    public Single<List<CustomerResponse>> getAllCustomers() {
+        return userDataSource.getAllCustomers()
+                .map(response -> {
+                    if (response.isSuccess()) {
+                        return response.getData();
+                    } else {
+                        throw new RuntimeException("Failed to fetch customers: " + response.getMessage());
                     }
                 });
     }

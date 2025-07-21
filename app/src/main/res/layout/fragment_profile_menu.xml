@@ -58,6 +58,7 @@
                     android:id="@+id/ivMore"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:visibility="gone"
                     android:src="@drawable/ic_more_vert"
                     app:tint="#666666" />
             </LinearLayout>
@@ -346,7 +347,7 @@
 
                     <!-- Cart -->
                     <LinearLayout
-                        android:id="@+id/llCart"
+                        android:id="@+id/llPendingOrders"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
@@ -373,7 +374,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_weight="1"
-                            android:text="Cart"
+                            android:text="Pending Orders"
                             android:textColor="#333333"
                             android:textSize="16sp" />
 
@@ -398,7 +399,7 @@
                         android:paddingTop="16dp"
                         android:paddingEnd="16dp"
                         android:paddingBottom="16dp"
-                        app:layout_constraintTop_toBottomOf="@id/llCart"
+                        app:layout_constraintTop_toBottomOf="@id/llPendingOrders"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 

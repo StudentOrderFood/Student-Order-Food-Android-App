@@ -36,5 +36,10 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderDataSource.updateOrderStatus(orderId, status);
     }
 
+    @Override
+    public Flowable<List<OrderRealTime>> getOrdersByUserId(String userId) {
+        return orderDataSource.getOrdersByUserId(userId);
+    }
+
 
 }

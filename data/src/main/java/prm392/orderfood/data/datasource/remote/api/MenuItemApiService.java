@@ -1,5 +1,7 @@
 package prm392.orderfood.data.datasource.remote.api;
 
+import java.util.List;
+
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -7,6 +9,7 @@ import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.domain.models.menuItem.MenuItemResponse;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -43,4 +46,7 @@ public interface MenuItemApiService {
 
     @DELETE("api/v1/MenuItem/{id}")
     Single<ApiResponse<String>> deleteMenuItem(@Path("id") String menuItemId);
+
+    @GET("api/v1/MenuItem")
+    Single<ApiResponse<List<MenuItemResponse>>> getAllMenuItems();
 }

@@ -11,4 +11,5 @@ public interface OrderRepository {
     Completable submitCodOrder(Order newOrder);
     Flowable<List<OrderRealTime>> getOrdersByShopId(String shopId);
     Completable updateOrderStatus(String orderId, String status);
+    Flowable<List<OrderRealTime>> getOrdersByUserId(String userId);
 }

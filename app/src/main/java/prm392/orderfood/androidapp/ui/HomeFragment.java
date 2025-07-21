@@ -43,6 +43,7 @@ import prm392.orderfood.androidapp.ui.adapter.HomeCategoryAdapter;
 import prm392.orderfood.androidapp.ui.adapter.PopularShopAdapter;
 import prm392.orderfood.androidapp.utils.DateTimeUtils;
 import prm392.orderfood.androidapp.viewModel.CategoryViewModel;
+import prm392.orderfood.androidapp.viewModel.MenuItemViewModel;
 import prm392.orderfood.androidapp.viewModel.ShopViewModel;
 import prm392.orderfood.androidapp.viewModel.UserViewModel;
 import prm392.orderfood.domain.models.category.CategoryResponse;
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private UserViewModel mUserViewModel;
     private ShopViewModel mShopViewModel;
+    private MenuItemViewModel mMenuItemViewModel;
     private CategoryViewModel mCategoryViewModel;
     private NavController navController;
 
@@ -112,6 +114,7 @@ public class HomeFragment extends Fragment {
         mUserViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         mCategoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         mShopViewModel = new ViewModelProvider(requireActivity()).get(ShopViewModel.class);
+        mMenuItemViewModel = new ViewModelProvider(requireActivity()).get(MenuItemViewModel.class);
         navController = Navigation.findNavController(requireView());
 
         fullShopList = new ArrayList<>();
@@ -129,6 +132,8 @@ public class HomeFragment extends Fragment {
         mCategoryViewModel.getAllCategories();
 //        mShopViewModel.fetchPopularShops(DateTimeUtils.getCurrentTime());
 //        Log.d(TAG, "onViewCreated: Current Time: " + DateTimeUtils.getCurrentTime());
+
+        mMenuItemViewModel.getAllMenuItems();
     }
 
     private void setupObservers() {

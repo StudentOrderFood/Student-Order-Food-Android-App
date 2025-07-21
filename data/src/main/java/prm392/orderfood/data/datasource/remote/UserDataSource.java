@@ -1,11 +1,14 @@
 package prm392.orderfood.data.datasource.remote;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.Single;
 import prm392.orderfood.data.datasource.remote.api.UserApiService;
 import prm392.orderfood.data.datasource.remote.modelResponse.ApiResponse;
 import prm392.orderfood.data.datasource.remote.modelResponse.user.GetUserResponse;
+import prm392.orderfood.domain.models.users.CustomerResponse;
 import prm392.orderfood.domain.models.users.UserProfile;
 import retrofit2.Response;
 
@@ -28,4 +31,10 @@ public class UserDataSource {
     public Single<ApiResponse<String>> checkPhoneNumberExists(String phoneNumber) {
         return userApiService.checkPhoneNumberExists(phoneNumber);
     }
+
+    public Single<ApiResponse<List<CustomerResponse>>> getAllCustomers() {
+        return userApiService.getAllCustomers();
+    }
+
+
 }
