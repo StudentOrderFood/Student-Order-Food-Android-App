@@ -12,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="293dp"
+        android:layout_height="wrap_content"
         android:padding="16dp">
 
         <!-- Header Section -->
@@ -172,13 +172,13 @@
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="0dp"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/red"
                 android:text="REJECT"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="6sp"
+                android:textSize="16sp"
                 app:strokeColor="@color/error_color"
                 app:strokeWidth="1dp" />
 
@@ -186,14 +186,14 @@
             <Button
                 android:id="@+id/btnConfirm"
                 android:layout_width="0dp"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:backgroundTint="@color/primary_color"
+                android:backgroundTint="@color/success_color"
                 android:text="CONFIRM"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="6sp" />
+                android:textSize="16sp" />
 
             <!-- Delivered Button -->
 
@@ -201,26 +201,26 @@
             <Button
                 android:id="@+id/btnDelivered"
                 android:layout_width="0dp"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:backgroundTint="@color/success_color"
+                android:backgroundTint="@color/primary_color"
                 android:text="DELIVERED"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="6sp" />
+                android:textSize="16sp" />
             <!-- Done Button -->
             <Button
                 android:id="@+id/btnDone"
                 android:layout_width="0dp"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:backgroundTint="@color/success_color"
                 android:text="DONE"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
-                android:textSize="6sp" />
+                android:textSize="16sp" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

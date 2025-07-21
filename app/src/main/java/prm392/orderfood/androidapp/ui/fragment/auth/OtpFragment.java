@@ -1,5 +1,6 @@
 package prm392.orderfood.androidapp.ui.fragment.auth;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import prm392.orderfood.androidapp.R;
@@ -87,6 +89,11 @@ public class OtpFragment extends Fragment {
                 navController.popBackStack(R.id.profileFragment, false);
             }
         });
+
+        binding.otpView.requestFocus();
+
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(binding.otpView, InputMethodManager.SHOW_IMPLICIT);
 
     }
 }
