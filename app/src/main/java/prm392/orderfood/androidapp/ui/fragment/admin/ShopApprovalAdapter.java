@@ -71,7 +71,7 @@ public class ShopApprovalAdapter extends RecyclerView.Adapter<ShopApprovalAdapte
         // Load ảnh shop
         Glide.with(holder.itemView.getContext())
                 .load(shop.getImageUrl())
-                .placeholder(R.drawable.sample_shop)
+                .placeholder(R.drawable.bg_image_placeholder)
                 .into(holder.ivImage);
 
         // Chỉ hiển thị nút khi là tab "Pending"

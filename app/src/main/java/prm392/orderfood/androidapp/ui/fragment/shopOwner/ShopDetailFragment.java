@@ -191,13 +191,13 @@ public class ShopDetailFragment extends Fragment {
             // Loading BG Shop
             Glide.with(binding.getRoot())
                     .load(shopDetailResponse.getImageUrl())
-                    .placeholder(R.drawable.sample_shop)
+                    .placeholder(R.drawable.bg_image_placeholder)
                     .into(binding.ivShopBG);
 
             // Loading Logo Shop
             Glide.with(binding.getRoot())
                     .load(shopDetailResponse.getImageUrl())
-                    .placeholder(R.drawable.sample_shop)
+                    .placeholder(R.drawable.bg_image_placeholder)
                     .into(binding.ivShopLogo);
 
             // Set shop name

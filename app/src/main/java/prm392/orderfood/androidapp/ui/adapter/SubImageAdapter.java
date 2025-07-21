@@ -36,7 +36,7 @@ public class SubImageAdapter extends RecyclerView.Adapter<SubImageAdapter.ViewHo
     public void onBindViewHolder(@NonNull SubImageAdapter.ViewHolder holder, int position) {
         Glide.with(holder.itemView.getContext())
                 .load(imageUrls.get(position))
-                .placeholder(R.drawable.sample_shop)
+                .placeholder(R.drawable.bg_image_placeholder)
                 .into(holder.imageView);
     }
 

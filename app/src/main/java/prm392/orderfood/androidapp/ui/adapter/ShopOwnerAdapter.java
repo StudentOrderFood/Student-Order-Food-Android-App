@@ -71,7 +71,7 @@ public class ShopOwnerAdapter extends RecyclerView.Adapter<ShopOwnerAdapter.View
 
         Glide.with(holder.itemView.getContext())
                 .load(shop.getImageUrl())
-                .placeholder(R.drawable.sample_shop)
+                .placeholder(R.drawable.bg_image_placeholder)
                 .into(holder.ivShop);
 
         // 👇 Gán sự kiện cho nút Sửa và Xóa

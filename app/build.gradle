@@ -12,6 +12,15 @@ android {
     namespace 'prm392.orderfood.androidapp'
     compileSdk 35
 
+    signingConfigs {
+        release {
+            storeFile file("D:\\WorkSpace\\PRM392\\Project\\Student-Order-Food-Android-App\\release-key.keystore")
+            storePassword "dat2003z"
+            keyAlias "myappkey"
+            keyPassword "dat2003z"
+        }
+    }
+
     defaultConfig {
         applicationId "prm392.orderfood.androidapp"
         minSdk 24
@@ -26,6 +35,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
